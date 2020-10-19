@@ -1,0 +1,13 @@
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.exe
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.deps.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.dev.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.dll
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.pdb
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csprojAssemblyReference.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfoInputs.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfo.cs
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.dll
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.pdb
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.genruntimeconfig.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
