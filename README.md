@@ -1,2 +1,6 @@
 # SeSkarpt
-Eksamensprojekt i 62413 Avanceret objektorienteret programmering med C# og .NET E20
+Created by Jeppe M. Bak and Ajs R. Stormholt
+Examsproject in 62413 Advanced objectoriented programming in C# and .NET E20 at the Technical University of Denmark
+
+
+
