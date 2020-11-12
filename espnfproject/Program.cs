@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Windows.Devices.WiFi;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Text;
 using nanoFramework.Hardware.Esp32;
 using Windows.Devices.Gpio;
@@ -55,95 +56,109 @@ namespace esptest0
                 Console.WriteLine("Connecting.....");
                 tcpclnt.Connect(ep);
                 Console.WriteLine("Connected to server");
-                Command command = Command.None;
-                Ledcolor ledcolor = Ledcolor.Off;
 
-                //Initiate GPIO controller
-                //var gpioController = GpioController.GetDefault();
-                // Open connections for LED pins
-                
-                // Define GPIO pin mode
-                _redLED.SetDriveMode(GpioPinDriveMode.Output);
-                _greenLED.SetDriveMode(GpioPinDriveMode.Output);
-                _blueLED.SetDriveMode(GpioPinDriveMode.Output);
-                Configuration.SetPinFunction(25, DeviceFunction.ADC1_CH8);
 
-                while (true)
+
+                using (SslStream stream = new SslStream(tcpclnt))
                 {
-                    // setup buffer to read data from socket
-                    command = Command.None;
-                    byte[] buffer = new byte[1024];
+                    Console.WriteLine("Authenticating server");
+                    
+                    stream.SslVerification = SslVerification.NoVerification;
+                   
+                   stream.AuthenticateAsClient(IP_ADDR, SslProtocols.Tls12);
 
-                    // trying to read from socket
-                    int bytes = tcpclnt.Receive(buffer);
 
-                    // Debug.WriteLine($"Read {bytes} bytes");
+                    Command command = Command.None;
+                    Ledcolor ledcolor = Ledcolor.Off;
 
-                    if (bytes > 0)
+                    //Initiate GPIO controller
+                    //var gpioController = GpioController.GetDefault();
+                    // Open connections for LED pins
+
+                    // Define GPIO pin mode
+                    _redLED.SetDriveMode(GpioPinDriveMode.Output);
+                    _greenLED.SetDriveMode(GpioPinDriveMode.Output);
+                    _blueLED.SetDriveMode(GpioPinDriveMode.Output);
+                    Configuration.SetPinFunction(25, DeviceFunction.ADC1_CH8);
+
+                    while (true)
                     {
-                        // we have data!
-                        // output as string
-                        Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
+                        // setup buffer to read data from socket
+                        command = Command.None;
+                        byte[] buffer = new byte[1024];
 
-                        if (Command.Disconnect.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                        // trying to read from socket
+                        // int bytes = tcpclnt.Receive(buffer);
+                        int bytes = stream.Read(buffer, 0, buffer.Length);
+                         Debug.WriteLine($"Read {bytes} bytes");
+
+                        if (bytes > 0)
                         {
-                            command = Command.Disconnect;
-                        }
-                        else if (Command.None.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.None;
-                        }
-                        else if (Command.GetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.GetData;
-                        }
-                        else if (Command.SetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.SetData;
-                        }
-                        else if (Command.SayHello.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.SayHello;
-                        }
-                     
-                    }
+                            // we have data!
+                            // output as string
+                            Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
 
-                    switch (command.Value)
-                    {
-                        case 0://DISCONNNECT
-                            tcpclnt.Close();
-                            Thread.Sleep(Timeout.Infinite);
-                            break;
-                        case 1://SAYHELLO
-                            Console.Write("Transmitting hello world : ");
-                            buffer = Encoding.UTF8.GetBytes("Hello world !\r\n");
-
-                            tcpclnt.Send(buffer);
-
-                            Debug.WriteLine($"Send {buffer.Length} bytes");
-                            break;
-                        case 2://GETDATA
-
-                            buffer = Encoding.UTF8.GetBytes(Gpio.IO25.ToString());
-
-                            tcpclnt.Send(buffer);
-
-                            Debug.WriteLine($"Send {buffer.Length} bytes");
-                            break;
-                        case 3://SETDATA
-                            buffer = new byte[1024];
-
-                            // trying to read from socket
-                            bytes = tcpclnt.Receive(buffer);
-
-                            if (bytes > 0)
+                            if (Command.Disconnect.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
                             {
-                                Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-                                controlLED(new String(Encoding.UTF8.GetChars(buffer)));
+                                command = Command.Disconnect;
                             }
-                            break;
-                        case 4: //NONE
-                            break;
+                            else if (Command.None.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                            {
+                                command = Command.None;
+                            }
+                            else if (Command.GetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                            {
+                                command = Command.GetData;
+                            }
+                            else if (Command.SetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                            {
+                                command = Command.SetData;
+                            }
+                            else if (Command.SayHello.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                            {
+                                command = Command.SayHello;
+                            }
+
+                        }
+
+                        switch (command.Value)
+                        {
+                            case 0://DISCONNNECT
+                                tcpclnt.Close();
+                                Thread.Sleep(Timeout.Infinite);
+                                break;
+                            case 1://SAYHELLO
+                                Console.Write("Transmitting hello world : ");
+                                buffer = Encoding.UTF8.GetBytes("Hello world !\r\n");
+
+                                //tcpclnt.Send(buffer);
+                                stream.Write(buffer,0, buffer.Length);
+                                stream.Flush();
+                                Debug.WriteLine($"Send {buffer.Length} bytes");
+                                break;
+                            case 2://GETDATA
+
+                                buffer = Encoding.UTF8.GetBytes(Gpio.IO25.ToString());
+
+                                tcpclnt.Send(buffer);
+
+                                Debug.WriteLine($"Send {buffer.Length} bytes");
+                                break;
+                            case 3://SETDATA
+                                buffer = new byte[1024];
+
+                                // trying to read from socket
+                                bytes = tcpclnt.Receive(buffer);
+
+                                if (bytes > 0)
+                                {
+                                    Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
+                                    controlLED(new String(Encoding.UTF8.GetChars(buffer)));
+                                }
+                                break;
+                            case 4: //NONE
+                                break;
+                        }
                     }
                 }
             }
