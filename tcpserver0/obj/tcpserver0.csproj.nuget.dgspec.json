@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Mit drev\\DTU\\62413 - C# og .NET\\Visual Studio\\tcpserver0\\tcpserver0.csproj": {}
+    "C:\\Users\\Stormholt\\Documents\\GitHub\\Se_Skarpt\\tcpserver0\\tcpserver0.csproj": {}
   },
   "projects": {
-    "G:\\Mit drev\\DTU\\62413 - C# og .NET\\Visual Studio\\tcpserver0\\tcpserver0.csproj": {
+    "C:\\Users\\Stormholt\\Documents\\GitHub\\Se_Skarpt\\tcpserver0\\tcpserver0.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Mit drev\\DTU\\62413 - C# og .NET\\Visual Studio\\tcpserver0\\tcpserver0.csproj",
+        "projectUniqueName": "C:\\Users\\Stormholt\\Documents\\GitHub\\Se_Skarpt\\tcpserver0\\tcpserver0.csproj",
         "projectName": "tcpserver0",
-        "projectPath": "G:\\Mit drev\\DTU\\62413 - C# og .NET\\Visual Studio\\tcpserver0\\tcpserver0.csproj",
+        "projectPath": "C:\\Users\\Stormholt\\Documents\\GitHub\\Se_Skarpt\\tcpserver0\\tcpserver0.csproj",
         "packagesPath": "C:\\Users\\Stormholt\\.nuget\\packages\\",
-        "outputPath": "G:\\Mit drev\\DTU\\62413 - C# og .NET\\Visual Studio\\tcpserver0\\obj\\",
+        "outputPath": "C:\\Users\\Stormholt\\Documents\\GitHub\\Se_Skarpt\\tcpserver0\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Stormholt\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,6 +38,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.4.0, )"
+            },
             "System.Net.Sockets": {
               "target": "Package",
               "version": "[4.3.0, )"

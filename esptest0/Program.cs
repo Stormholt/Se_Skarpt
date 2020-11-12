@@ -54,7 +54,7 @@ namespace esptest0
 
                 Debug.WriteLine($"Send {buffer.Length} bytes");
 
-                Configuration.SetPinFunction(25, DeviceFunction.ADC1_CH0);
+                Configuration.SetPinFunction(25, DeviceFunction.ADC1_CH8);
                 
 
                 buffer = Encoding.UTF8.GetBytes(Gpio.IO25.ToString());
@@ -62,6 +62,13 @@ namespace esptest0
                 tcpclnt.Send(buffer);
 
                 Debug.WriteLine($"Send {buffer.Length} bytes");
+
+                Configuration.SetPinFunction(36, DeviceFunction.ADC1_CH0);
+                Configuration.SetPinFunction(39, DeviceFunction.ADC1_CH3);
+                Configuration.SetPinFunction(34, DeviceFunction.ADC1_CH6);
+
+
+                //Gpio.IO36 = 1;
 
                 //// setup buffer to read data from socket
                 //buffer = new byte[1024];
