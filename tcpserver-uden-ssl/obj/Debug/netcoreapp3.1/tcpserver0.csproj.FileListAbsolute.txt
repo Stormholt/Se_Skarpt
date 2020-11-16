@@ -1,0 +1,47 @@
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.exe
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.deps.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.dev.json
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.dll
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.pdb
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csprojAssemblyReference.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfoInputs.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfo.cs
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.dll
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.pdb
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.genruntimeconfig.cache
+G:\Mit drev\DTU\62413 - C# og .NET\Visual Studio\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.exe
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.deps.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.dev.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\tcpserver0.pdb
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csprojAssemblyReference.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfoInputs.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfo.cs
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.pdb
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.genruntimeconfig.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver0\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CopyComplete
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.exe
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.deps.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.runtimeconfig.dev.json
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\tcpserver0.pdb
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csprojAssemblyReference.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfoInputs.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfo.cs
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CopyComplete
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.pdb
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.genruntimeconfig.cache
