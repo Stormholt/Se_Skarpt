@@ -20,6 +20,27 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "nanoFramework.CoreLibrary/1.9.1-preview.6": {
+        "type": "package",
+        "compile": {
+          "lib/mscorlib.dll": {}
+        },
+        "runtime": {
+          "lib/mscorlib.dll": {}
+        }
+      },
+      "nanoFramework.Windows.Devices.I2c/1.4.1-preview.15": {
+        "type": "package",
+        "dependencies": {
+          "nanoFramework.CoreLibrary": "1.9.1-preview.6"
+        },
+        "compile": {
+          "lib/Windows.Devices.I2c.dll": {}
+        },
+        "runtime": {
+          "lib/Windows.Devices.I2c.dll": {}
+        }
+      },
       "System.Configuration.ConfigurationManager/4.4.0": {
         "type": "package",
         "dependencies": {
@@ -160,6 +181,38 @@
         "microsoft.netcore.targets.1.1.0.nupkg.sha512",
         "microsoft.netcore.targets.nuspec",
         "runtime.json"
+      ]
+    },
+    "nanoFramework.CoreLibrary/1.9.1-preview.6": {
+      "sha512": "tmn4GJvAxyde2ABGSZfBezmR9EkzJ5iHmSHwTKnPc1UjIbRUTe37zqXfJEPO1kJlf+jLe4wRhKYyUqkqnzDvxw==",
+      "type": "package",
+      "path": "nanoframework.corelibrary/1.9.1-preview.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/mscorlib.dll",
+        "lib/mscorlib.pdbx",
+        "lib/mscorlib.pe",
+        "lib/mscorlib.xml",
+        "nanoframework.corelibrary.1.9.1-preview.6.nupkg.sha512",
+        "nanoframework.corelibrary.nuspec",
+        "readme.txt"
+      ]
+    },
+    "nanoFramework.Windows.Devices.I2c/1.4.1-preview.15": {
+      "sha512": "N6rU9D29ta7wgQpnTLpUSk4ZfLd4AwQOVA5pdrQ3deboh9jkLxlKrjbU0Tbk0opgoDLIU9/TQtHATIccK9nJvw==",
+      "type": "package",
+      "path": "nanoframework.windows.devices.i2c/1.4.1-preview.15",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/Windows.Devices.I2c.dll",
+        "lib/Windows.Devices.I2c.pdbx",
+        "lib/Windows.Devices.I2c.pe",
+        "lib/Windows.Devices.I2c.xml",
+        "nanoframework.windows.devices.i2c.1.4.1-preview.15.nupkg.sha512",
+        "nanoframework.windows.devices.i2c.nuspec",
+        "readme.txt"
       ]
     },
     "System.Configuration.ConfigurationManager/4.4.0": {
@@ -692,7 +745,8 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "System.Configuration.ConfigurationManager >= 4.4.0",
-      "System.Net.Sockets >= 4.3.0"
+      "System.Net.Sockets >= 4.3.0",
+      "nanoFramework.Windows.Devices.I2c >= 1.4.1-preview.15"
     ]
   },
   "packageFolders": {
@@ -739,6 +793,10 @@
           "System.Net.Sockets": {
             "target": "Package",
             "version": "[4.3.0, )"
+          },
+          "nanoFramework.Windows.Devices.I2c": {
+            "target": "Package",
+            "version": "[1.4.1-preview.15, )"
           }
         },
         "imports": [
@@ -759,5 +817,27 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'nanoFramework.CoreLibrary 1.9.1-preview.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "nanoFramework.CoreLibrary",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'nanoFramework.Windows.Devices.I2c 1.4.1-preview.15' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "nanoFramework.Windows.Devices.I2c",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

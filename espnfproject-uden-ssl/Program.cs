@@ -1,38 +1,46 @@
 using System;
+//Nanoframework specific classes
 using System.Threading;
 using System.Diagnostics;
 using Windows.Devices.WiFi;
+using Windows.Devices.Adc;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.Security;
 using System.Text;
-using nanoFramework.Hardware.Esp32;
 using Windows.Devices.Gpio;
-using System.Collections;
+
+//Classes created for this project
+using espSensors;
+using SeSkarptEnumClasses;
+using RGBled;
 
 
-namespace esptest0
+
+
+namespace espnfproject
 {
 
     public class Program
     {
         // Set the SSID & Password to your local WiFi network
+        // Ajs mobil hotspot
         /*const string MYSSID = "AndroidAP7914";
         const string MYPASSWORD = "lqbk3422";
         const string IP_ADDR = "192.168.43.61";*/
 
+        // Ajs hjemme wifi
         const string MYSSID = "WiFimodem-BAB4";
         const string MYPASSWORD = "gjz4gjzntz";
         const string IP_ADDR = "192.168.0.13";
-        const int TCP_PORT = 8001;
-        // static Command commands = new Command();
-        //   [Flags]
-        //   enum Command {GetData, SetData, Disconnect, None, SayHello }
-        static Ledcolor ledcolor = Ledcolor.Off;
-        static GpioPin _redLED = GpioController.GetDefault().OpenPin(2);
-        static GpioPin _greenLED = GpioController.GetDefault().OpenPin(0);
-        static GpioPin _blueLED = GpioController.GetDefault().OpenPin(4);
 
+        const int TCP_PORT = 8001;
+
+        const int photoresistor_PIN = 0;
+        const int LM35_PIN = 3;
+        const int LEDR_PIN = 2;
+        const int LEDG_PIN = 0;
+        const int LEDB_PIN = 4;
+        
         public static void Main()
         {
             try
@@ -42,76 +50,52 @@ namespace esptest0
                 // Set up the AvailableNetworksChanged event to pick up when scan has completed
                 wifi.AvailableNetworksChanged += Wifi_AvailableNetworksChanged;
 
-                Console.WriteLine("starting WiFi scan");
+                Debug.WriteLine("starting WiFi scan");
                 wifi.ScanAsync();
                 Thread.Sleep(10000);
                 
                 Socket tcpclnt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                Console.WriteLine("Created tcp client socket");
+                Debug.WriteLine("Created tcp client socket");
                 // need an IPEndPoint from that one above
                 
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
-                Console.WriteLine("Created endpoint to server");
+                Debug.WriteLine("Created endpoint to server");
                 //TcpClient tcpclnt = new TcpClient();
-                Console.WriteLine("Connecting.....");
+                Debug.WriteLine("Connecting.....");
                 tcpclnt.Connect(ep);
-                Console.WriteLine("Connected to server");
+                Debug.WriteLine("Connected to server");
 
-             
-
+               
                 Command command = Command.None;
                 Ledcolor ledcolor = Ledcolor.Off;
 
-                //Initiate GPIO controller
-                //var gpioController = GpioController.GetDefault();
-                // Open connections for LED pins
+                RGBLED rgbled = new RGBLED(GpioController.GetDefault().OpenPin(LEDR_PIN),
+                                             GpioController.GetDefault().OpenPin(LEDG_PIN),
+                                             GpioController.GetDefault().OpenPin(LEDB_PIN));
 
-                // Define GPIO pin mode
-                _redLED.SetDriveMode(GpioPinDriveMode.Output);
-                _greenLED.SetDriveMode(GpioPinDriveMode.Output);
-                _blueLED.SetDriveMode(GpioPinDriveMode.Output);
-                Configuration.SetPinFunction(25, DeviceFunction.ADC1_CH8);
+                AdcController adcController = AdcController.GetDefault();
+                adcController.ChannelMode = AdcChannelMode.SingleEnded;    // ADC value comes from a single point 
+                Photoresistor photoresistor = new Photoresistor( adcController.OpenChannel(photoresistor_PIN));// ADC channel 0 - Photoresistor
+                LM35 lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
+
+                byte[] buffer;
+
 
                 while (true)
                 {
                     // setup buffer to read data from socket
                     command = Command.None;
-                    byte[] buffer = new byte[1024];
+                    buffer = new byte[1024];
 
                     // trying to read from socket
                      int bytes = tcpclnt.Receive(buffer);
-                    
-                      Debug.WriteLine($"Read {bytes} bytes");
 
                     if (bytes > 0)
                     {
-                        // we have data!
-                        // output as string
                         Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-
-                        if (Command.Disconnect.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.Disconnect;
-                        }
-                        else if (Command.None.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.None;
-                        }
-                        else if (Command.GetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.GetData;
-                        }
-                        else if (Command.SetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.SetData;
-                        }
-                        else if (Command.SayHello.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                        {
-                            command = Command.SayHello;
-                        }
-
+                        command = command.FindCommand(new String(Encoding.UTF8.GetChars(buffer)));
                     }
-
+                    buffer = new byte[1024];
                     switch (command.Value)
                     {
                         case 0://DISCONNNECT
@@ -119,110 +103,37 @@ namespace esptest0
                             Thread.Sleep(Timeout.Infinite);
                             break;
                         case 1://SAYHELLO
-                            Console.Write("Transmitting hello world : ");
+                            Debug.Write("Transmitting hello world : ");
                             buffer = Encoding.UTF8.GetBytes("Hello world !\r\n");
-
                             tcpclnt.Send(buffer);
-                       
-                            Debug.WriteLine($"Send {buffer.Length} bytes");
                             break;
                         case 2://GETDATA
-                            buffer = Encoding.UTF8.GetBytes(Gpio.IO25.ToString());
+                            string msg = $"Light level: {photoresistor.CalculateLumen()} Lumen, Temperature: {lm35.CalculateCelsius()}C";
+                            buffer = Encoding.UTF8.GetBytes(msg);
                             tcpclnt.Send(buffer);
-                            Debug.WriteLine($"Send {buffer.Length} bytes");
                             break;
                         case 3://SETDATA
-                            buffer = new byte[1024];
                             bytes = tcpclnt.Receive(buffer);
                             if (bytes > 0)
                             {
-                                controlLED(new String(Encoding.UTF8.GetChars(buffer)));
+                                rgbled.controlLED(Ledcolor.Off.FindLedcolor( new String(Encoding.UTF8.GetChars(buffer))));
                             }
                             break;
                         case 4: //NONE
                             break;
                     }
                 }
-                
             }
             catch (Exception ex)
             {
-                Console.WriteLine("message:" + ex.Message);
-                Console.WriteLine("stack:" + ex.StackTrace);
+                Debug.WriteLine("message:" + ex.Message);
+                Debug.WriteLine("stack:" + ex.StackTrace);
             }
 
             Thread.Sleep(Timeout.Infinite);
         }
-
-        private static void controlLED(string command)
-        {
-            if (Ledcolor.Red.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Red;
-                _greenLED.Write(GpioPinValue.Low);
-                _blueLED.Write(GpioPinValue.Low);
-                _redLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.Green.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Green;
-                _redLED.Write(GpioPinValue.Low);
-                _blueLED.Write(GpioPinValue.Low);
-                _greenLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.Blue.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Blue;
-                _redLED.Write(GpioPinValue.Low);
-                _greenLED.Write(GpioPinValue.Low);
-                _blueLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.Magenta.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Magenta;
-                _greenLED.Write(GpioPinValue.Low);
-                _redLED.Write(GpioPinValue.High);
-                _blueLED.Write(GpioPinValue.High);
-
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.Cyan.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Cyan;
-                _greenLED.Write(GpioPinValue.High);
-                _redLED.Write(GpioPinValue.Low);
-                _blueLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.Yellow.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.Yellow;
-                _blueLED.Write(GpioPinValue.Low);
-                _greenLED.Write(GpioPinValue.High);
-                _redLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else if (Ledcolor.White.Name.Equals(command))
-            {
-                ledcolor = Ledcolor.White;
-                _blueLED.Write(GpioPinValue.High);
-                _greenLED.Write(GpioPinValue.High);
-                _redLED.Write(GpioPinValue.High);
-                Console.WriteLine(ledcolor.Name);
-            }
-            else
-            {
-                ledcolor = Ledcolor.Off;
-                _redLED.Write(GpioPinValue.Low);
-                _greenLED.Write(GpioPinValue.Low);
-                _blueLED.Write(GpioPinValue.Low);
-                Console.WriteLine(ledcolor.Name);
-            }
-
-        }
+      
+       
 
         /// <summary>
         /// Event handler for when WiFi scan completes
@@ -232,7 +143,7 @@ namespace esptest0
 
         private static void Wifi_AvailableNetworksChanged(WiFiAdapter sender, object e)
         {
-            Console.WriteLine("Wifi_AvailableNetworksChanged - get report");
+            Debug.WriteLine("Wifi_AvailableNetworksChanged - get report");
 
             // Get Report of all scanned WiFi networks
             WiFiNetworkReport report = sender.NetworkReport;
@@ -241,7 +152,7 @@ namespace esptest0
             foreach (WiFiAvailableNetwork net in report.AvailableNetworks)
             {
                 // Show all networks found
-                //  Console.WriteLine($"Net SSID :{net.Ssid},  BSSID : {net.Bsid},  rssi : {net.NetworkRssiInDecibelMilliwatts.ToString()},  signal : {net.SignalBars.ToString()}");
+                //  Debug.WriteLine($"Net SSID :{net.Ssid},  BSSID : {net.Bsid},  rssi : {net.NetworkRssiInDecibelMilliwatts.ToString()},  signal : {net.SignalBars.ToString()}");
 
                 // If its our Network then try to connect
                 if (net.Ssid == MYSSID)
@@ -256,56 +167,118 @@ namespace esptest0
                     if (result.ConnectionStatus == WiFiConnectionStatus.Success)
                     {
                         
-                        Console.WriteLine("Connected to Wifi network");
+                        Debug.WriteLine("Connected to Wifi network");
                         break;
                     }
                     else
                     {
-                        Console.WriteLine($"Error {result.ConnectionStatus.ToString()} connecting o Wifi network");
+                        Debug.WriteLine($"Error {result.ConnectionStatus.ToString()} connecting o Wifi network");
                     }
                 }
             }
-
+     
            
         }
     }
-    public class Command
-    {
-        public static Command Disconnect { get; } = new Command(0, "Disconnect");
-        public static Command SayHello { get; } = new Command(1, "SayHello");
-        public static Command GetData { get; } = new Command(2, "GetData");
-        public static Command SetData { get; } = new Command(3, "SetData");
-        public static Command None { get; } = new Command(4, "None");
 
-        public string Name { get; private set; }
-        public int Value { get; private set; }
 
-        private Command(int val, string name)
+
+
+    /*ATTEMPT AT PROGRAMMING DHT22 protocol.  */
+
+    /*    public class Dhtreading
         {
-            Value = val;
-            Name = name;
-        }
+            bool TimedOut;
+            bool IsValid;
+            double Temperature;
+            double Humidity;
+            int RetryCount;
 
-    }
 
-    public class Ledcolor
-    {
-        public static Ledcolor Red { get; } = new Ledcolor(0, "Red");
-        public static Ledcolor Blue { get; } = new Ledcolor(1, "Blue");
-        public static Ledcolor Green { get; } = new Ledcolor(2, "Green");
-        public static Ledcolor Magenta { get; } = new Ledcolor(3, "Magenta");
-        public static Ledcolor Cyan { get; } = new Ledcolor(4, "Cyan");
-        public static Ledcolor Yellow { get; } = new Ledcolor(5, "Yellow");
-        public static Ledcolor White { get; } = new Ledcolor(6, "White");
-        public static Ledcolor Off { get; } = new Ledcolor(7, "Off");
-        public string Name { get; private set; }
-        public int Value { get; private set; }
+        }*/
 
-        private Ledcolor(int val, string name)
+    /*    public class Dht22
         {
-            Value = val;
-            Name = name;
-        }
+            GpioPin pin;
 
-    }
+            public Dht22()
+            {
+                this.pin = null;
+            }
+            public Dht22(GpioPin pin, GpioPinDriveMode inputReadMode)
+            {
+                this.pin = pin;
+                this.pin.SetDriveMode(inputReadMode);
+            }
+
+            Dhtreading InternalGetReading()
+            {
+
+            }
+
+            Dhtreading CalculateValues(ArrayList<bitArray>, )
+
+        }*/
+
+
+
+    /*ulong curTime;
+                 ulong prevTime;
+                 HighResTimer timer = new HighResTimer();
+                _lm35.SetDriveMode(GpioPinDriveMode.Output);
+                _lm35.Write(GpioPinValue.High);
+                Thread.Sleep(10);//10 milliseconds
+                _lm35.Write(GpioPinValue.Low);
+                Thread.Sleep(18);
+                _lm35.Write(GpioPinValue.High);
+                _lm35.SetDriveMode(GpioPinDriveMode.Input);
+                prevTime = HighResTimer.GetCurrent();
+                curTime = HighResTimer.GetCurrent();
+                while(curTime - prevTime< 40){
+                    curTime = HighResTimer.GetCurrent();
+                }
+                if (_lm35.Read() == GpioPinValue.Low)
+                {
+                    Debug.WriteLine("Response from DHT was send at first attempt");
+                    for( int i = 0; i<40; i++)
+                    {
+                        
+
+                    }
+                
+                }
+                else
+                {
+                     Debug.WriteLine(" NO!! Response from DHT ");
+                }*/
 }
+/*  Configuration.SetPinFunction(21, DeviceFunction.I2C1_CLOCK);
+                Configuration.SetPinFunction(22, DeviceFunction.I2C1_DATA);
+
+                Bmp280 bmp280 = new Bmp280();
+                bmp280.Initialize();
+                while (bmp280.IsMeasuring()) { }
+                
+                if (bmp280.Read())
+                {   
+                    float temp = bmp280.TemperatureInCelcius;
+                    float pressure = bmp280.PressureInPa;
+                    Debug.WriteLine($"temp = {temp}, pressure = {pressure}");
+                }
+                else { Debug.WriteLine("Failed to read bmp280"); }
+*/
+/*I2cConnectionSettings settings = new I2cConnectionSettings(0x77);
+settings.BusSpeed = I2cBusSpeed.StandardMode;
+settings.SharingMode = I2cSharingMode.Exclusive;
+Debug.WriteLine("I2C settings is set");*/
+/*  Configuration.SetPinFunction(22, DeviceFunction.I2C1_CLOCK);
+  Configuration.SetPinFunction(21, DeviceFunction.I2C1_DATA);*/
+
+/*I2cController i2cController = I2cController.GetDefault();
+      Debug.WriteLine("I2C Controller is set");
+      i2cDevice = I2cDevice.FromId("i2cBus", new I2cConnectionSettings(BMP280_ADDR)); ;
+      Debug.WriteLine("I2C Device is set");*/
+/*     I2cConnectionSettings settings = new I2cConnectionSettings(22, BMP280_ADDR);
+     I2cDevice i2cDevice = new I2cDevice(settings);
+     i2cDevice.Read(buffer);
+     Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));*/

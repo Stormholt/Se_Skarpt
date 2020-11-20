@@ -45,6 +45,10 @@
             "System.Net.Sockets": {
               "target": "Package",
               "version": "[4.3.0, )"
+            },
+            "nanoFramework.Windows.Devices.I2c": {
+              "target": "Package",
+              "version": "[1.4.1-preview.15, )"
             }
           },
           "imports": [

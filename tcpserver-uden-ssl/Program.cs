@@ -12,11 +12,13 @@ using System.Net.Security;
 using System.Security.Authentication;
 
 
+
 public class tcpserver0
 {
 
     //const string IP_ADDR = "192.168.43.61"; // IP med Ajs hotspot
-    const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
+     const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
+
     const int TCP_PORT = 8001;
 
     [Flags]
@@ -74,6 +76,7 @@ public class tcpserver0
                         Console.WriteLine("Received...");
                         for (int i = 0; i < k; i++)
                             Console.Write(Convert.ToChar(b[i]));
+                        Console.Write("\n");
                         command = Command.None;
                         break;
                     case Command.SetData:

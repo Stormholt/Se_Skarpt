@@ -9,7 +9,8 @@
       "tcpserver0/1.0.0": {
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.4.0",
-          "System.Net.Sockets": "4.3.0"
+          "System.Net.Sockets": "4.3.0",
+          "nanoFramework.Windows.Devices.I2c": "1.4.1-preview.15"
         },
         "runtime": {
           "tcpserver0.dll": {}
@@ -17,6 +18,18 @@
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "nanoFramework.CoreLibrary/1.9.1-preview.6": {},
+      "nanoFramework.Windows.Devices.I2c/1.4.1-preview.15": {
+        "dependencies": {
+          "nanoFramework.CoreLibrary": "1.9.1-preview.6"
+        },
+        "runtime": {
+          "lib/Windows.Devices.I2c.dll": {
+            "assemblyVersion": "1.4.1.0",
+            "fileVersion": "1.4.1.0"
+          }
+        }
+      },
       "System.Configuration.ConfigurationManager/4.4.0": {
         "dependencies": {
           "System.Security.Cryptography.ProtectedData": "4.4.0"
@@ -119,6 +132,20 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
+    },
+    "nanoFramework.CoreLibrary/1.9.1-preview.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tmn4GJvAxyde2ABGSZfBezmR9EkzJ5iHmSHwTKnPc1UjIbRUTe37zqXfJEPO1kJlf+jLe4wRhKYyUqkqnzDvxw==",
+      "path": "nanoframework.corelibrary/1.9.1-preview.6",
+      "hashPath": "nanoframework.corelibrary.1.9.1-preview.6.nupkg.sha512"
+    },
+    "nanoFramework.Windows.Devices.I2c/1.4.1-preview.15": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-N6rU9D29ta7wgQpnTLpUSk4ZfLd4AwQOVA5pdrQ3deboh9jkLxlKrjbU0Tbk0opgoDLIU9/TQtHATIccK9nJvw==",
+      "path": "nanoframework.windows.devices.i2c/1.4.1-preview.15",
+      "hashPath": "nanoframework.windows.devices.i2c.1.4.1-preview.15.nupkg.sha512"
     },
     "System.Configuration.ConfigurationManager/4.4.0": {
       "type": "package",

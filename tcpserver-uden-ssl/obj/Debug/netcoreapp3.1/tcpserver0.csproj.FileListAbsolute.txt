@@ -40,8 +40,9 @@ C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netco
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csprojAssemblyReference.cache
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfoInputs.cache
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.AssemblyInfo.cs
-C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CopyComplete
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.dll
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.pdb
 C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.genruntimeconfig.cache
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\bin\Debug\netcoreapp3.1\Windows.Devices.I2c.dll
+C:\Users\Stormholt\Documents\GitHub\Se_Skarpt\tcpserver-uden-ssl\obj\Debug\netcoreapp3.1\tcpserver0.csproj.CoreCompileInputs.cache
