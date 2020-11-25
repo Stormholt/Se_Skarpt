@@ -40,12 +40,20 @@ namespace WpfApp1
 
         public void sendData(int temp, int humit)
         {
-            string query = "INSERT INTO TempAndHumit (`temp`, `humit`) VALUES (@temp, @humit)";
+            
+            string query = "INSERT INTO TempAndHumit (`temp`, `humit`, `datetime`) VALUES (@temp, @humit, @datetime)";
             SQLiteCommand myCommand = new SQLiteCommand(query, myConnection);
             myCommand.Parameters.AddWithValue("@temp", temp);
             myCommand.Parameters.AddWithValue("@humit", humit);
+            myCommand.Parameters.AddWithValue("@datetime", ToJulianDate(DateTime.Now));
             myCommand.ExecuteNonQuery();
+            
+        }
 
+        //https://stackoverflow.com/questions/5248827/convert-datetime-to-julian-date-in-c-sharp-tooadate-safe
+        public static double ToJulianDate(DateTime date)
+        {
+            return date.ToOADate() + 2415018.5;
         }
 
         public DataTable Filldata()
