@@ -37,7 +37,8 @@ namespace WpfApp1
             ChartValues<double> tempList = new ChartValues<double>();
             for(int i = 0; i < databaseObject.Filldata().Rows.Count; i++)
             {
-                tempList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["temp"]));   
+                tempList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["temp"]));
+                Labels = new[] {Convert.ToString(databaseObject.Filldata().Rows[i]["temp"]) };
             }
             SeriesCollection = new SeriesCollection
             {
@@ -50,22 +51,6 @@ namespace WpfApp1
 
             
             Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" };
-            //Temp = value => value.ToString("C");
-            /*
-            //modifying the series collection will animate and update the chart
-            SeriesCollection.Add(new LineSeries
-            {
-                Title = "Series 4",
-                Values = new ChartValues<double> { 5, 3, 2, 4 },
-                LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-                //PointGeometry = Geometry.Parse("m 25 70.36218 20 -28 -20 22 -8 -6 z"),
-                PointGeometrySize = 50,
-                PointForeground = Brushes.Gray
-            });
-
-            //modifying any series values will also animate and update the chart
-            SeriesCollection[1].Values.Add(5d);
-            */
             DataContext = this;
             
         }
@@ -84,6 +69,5 @@ namespace WpfApp1
         }
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
-        //public Func<double, string> Temp { get; set; }
     }
 }
