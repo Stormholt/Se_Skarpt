@@ -9,7 +9,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Security;
-
+using System.Security.Authentication;
 
 public class tcpserver0
 {
@@ -42,7 +42,8 @@ public class tcpserver0
             //  Console.WriteLine("Connection accepted from " + client.RemoteEndPoint);
             using (SslStream stream = new SslStream(client.GetStream(),false))
             {
-                stream.AuthenticateAsServer(null, clientCertificateRequired: false, checkCertificateRevocation: true);
+                
+                stream.AuthenticateAsServer(null, clientCertificateRequired: false, SslProtocols.None, checkCertificateRevocation: false);
 
                 // Set timeouts for the read and write to 5 seconds.
                 stream.ReadTimeout = 5000;
@@ -60,6 +61,7 @@ public class tcpserver0
                  //   int k = 0;
                     // client.Send(asen.GetBytes(command.ToString()));
                     stream.Write(asen.GetBytes(command.ToString()));
+                    stream.Flush();
                     Console.WriteLine("Command sent");
                     switch (command)
                     {
@@ -105,6 +107,7 @@ public class tcpserver0
 
                             //client.Send(asen.GetBytes(ledcolor.ToString()));
                             stream.Write(asen.GetBytes(ledcolor.ToString()));
+                            stream.Flush();
                             Console.WriteLine("LED color sent \r");
                             command = Command.None;
                             break;

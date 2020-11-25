@@ -57,16 +57,16 @@ namespace esptest0
                 tcpclnt.Connect(ep);
                 Console.WriteLine("Connected to server");
 
-
+                
 
                 using (SslStream stream = new SslStream(tcpclnt))
                 {
                     Console.WriteLine("Authenticating server");
                     
                     stream.SslVerification = SslVerification.NoVerification;
-                   
-                   stream.AuthenticateAsClient(IP_ADDR, SslProtocols.Tls12);
 
+                    // stream.AuthenticateAsClient(IP_ADDR, SslProtocols.Tls12);
+                    stream.AuthenticateAsClient(null, SslProtocols.None);
 
                     Command command = Command.None;
                     Ledcolor ledcolor = Ledcolor.Off;
@@ -89,37 +89,57 @@ namespace esptest0
 
                         // trying to read from socket
                         // int bytes = tcpclnt.Receive(buffer);
-                        int bytes = stream.Read(buffer, 0, buffer.Length);
-                         Debug.WriteLine($"Read {bytes} bytes");
-
-                        if (bytes > 0)
+                        // int bytes = stream.Read(buffer, 0, buffer.Length);
+                        //  Debug.WriteLine($"Read {bytes} bytes");
+                        string message = ReadMessage(stream);
+                        if (Command.Disconnect.Name.Equals(message))
                         {
-                            // we have data!
-                            // output as string
-                            Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-
-                            if (Command.Disconnect.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                            {
-                                command = Command.Disconnect;
-                            }
-                            else if (Command.None.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                            {
-                                command = Command.None;
-                            }
-                            else if (Command.GetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                            {
-                                command = Command.GetData;
-                            }
-                            else if (Command.SetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                            {
-                                command = Command.SetData;
-                            }
-                            else if (Command.SayHello.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
-                            {
-                                command = Command.SayHello;
-                            }
-
+                            command = Command.Disconnect;
                         }
+                        else if (Command.None.Name.Equals(message))
+                        {
+                            command = Command.None;
+                        }
+                        else if (Command.GetData.Name.Equals(message))
+                        {
+                            command = Command.GetData;
+                        }
+                        else if (Command.SetData.Name.Equals(message))
+                        {
+                            command = Command.SetData;
+                        }
+                        else if (Command.SayHello.Name.Equals(message))
+                        {
+                            command = Command.SayHello;
+                        }
+                        /*  if (bytes > 0)
+                          {
+                              // we have data!
+                              // output as string
+                              Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
+
+                              if (Command.Disconnect.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                              {
+                                  command = Command.Disconnect;
+                              }
+                              else if (Command.None.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                              {
+                                  command = Command.None;
+                              }
+                              else if (Command.GetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                              {
+                                  command = Command.GetData;
+                              }
+                              else if (Command.SetData.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                              {
+                                  command = Command.SetData;
+                              }
+                              else if (Command.SayHello.Name.Equals(new String(Encoding.UTF8.GetChars(buffer))))
+                              {
+                                  command = Command.SayHello;
+                              }
+
+                          }*/
 
                         switch (command.Value)
                         {
@@ -127,7 +147,7 @@ namespace esptest0
                                 tcpclnt.Close();
                                 Thread.Sleep(Timeout.Infinite);
                                 break;
-                            case 1://SAYHELLO
+                            case 1://SAYHELLOface
                                 Console.Write("Transmitting hello world : ");
                                 buffer = Encoding.UTF8.GetBytes("Hello world !\r\n");
 
@@ -140,21 +160,25 @@ namespace esptest0
 
                                 buffer = Encoding.UTF8.GetBytes(Gpio.IO25.ToString());
 
-                                tcpclnt.Send(buffer);
+                                //tcpclnt.Send(buffer);
+                                stream.Write(buffer, 0, buffer.Length);
+                                stream.Flush();
 
                                 Debug.WriteLine($"Send {buffer.Length} bytes");
                                 break;
                             case 3://SETDATA
                                 buffer = new byte[1024];
-
+                                message = ReadMessage(stream);
+                                Debug.WriteLine(message);
+                                controlLED(message);
                                 // trying to read from socket
-                                bytes = tcpclnt.Receive(buffer);
+                                /*  bytes = tcpclnt.Receive(buffer);
 
-                                if (bytes > 0)
-                                {
-                                    Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-                                    controlLED(new String(Encoding.UTF8.GetChars(buffer)));
-                                }
+                                  if (bytes > 0)
+                                  {
+                                      Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
+                                      controlLED(new String(Encoding.UTF8.GetChars(buffer)));
+                                  }*/
                                 break;
                             case 4: //NONE
                                 break;
@@ -169,6 +193,38 @@ namespace esptest0
             }
 
             Thread.Sleep(Timeout.Infinite);
+        }
+        static string ReadMessage(SslStream sslStream)
+        {
+            // Read the  message sent by the server.
+            // The end of the message is signaled using the
+            // "<EOF>" marker.
+            byte[] buffer = new byte[2048];
+            StringBuilder messageData = new StringBuilder();
+            int bytes = -1;
+          /*  do
+            {*/
+                bytes = sslStream.Read(buffer, 0, buffer.Length);
+
+                // Use Decoder class to convert from bytes to UTF8
+                // in case a character spans two buffers.
+                Decoder decoder = Encoding.UTF8.GetDecoder();
+                // char[] chars = new char[decoder. GetCharCount(buffer, 0, bytes)];
+                // decoder.GetChars(buffer, 0, bytes, chars, 0);
+                char[] chars = new char[1024];
+                bool completed;
+                int byteUsed;
+                int charsUsed;
+                decoder.Convert(buffer, 0, buffer.Length, chars, 0, chars.Length, true, out byteUsed, out charsUsed, out completed);
+                messageData.Append(chars);
+                // Check for EOF.
+             /*   if (messageData.ToString().IndexOf("<EOF>") != -1)
+                {
+                    break;
+                }
+            } while (bytes != 0);*/
+
+            return messageData.ToString();
         }
 
         private static void controlLED(string command)
