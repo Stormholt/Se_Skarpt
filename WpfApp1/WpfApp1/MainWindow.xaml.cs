@@ -41,27 +41,40 @@ namespace WpfApp1
             Value = 160; //Angular Gauge
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
-            ChartValues<double> datetimeList = new ChartValues<double>();
-            for(int i = 0; i < databaseObject.Filldata().Rows.Count; i++)
+            ChartValues<double> lightList = new ChartValues<double>();
+            string[] datetimearray = new string[databaseObject.Filldata().Rows.Count];
+            DateTime[] datetimestringarray = new DateTime[databaseObject.Filldata().Rows.Count];
+
+            for (int i = 0; i < databaseObject.Filldata().Rows.Count; i++)
             {
                 tempList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["temp"]));
-                //datetimeList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["datetime"]));
-            }
-            SeriesCollection = new SeriesCollection
+                lightList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["humit"]));
+                datetimearray[i] = DateTime.FromOADate((Double)databaseObject.Filldata().Rows[(databaseObject.Filldata().Rows.Count - 1)]["datetime"] - 2415018.5).ToString("g");
+
+                SeriesCollection = new SeriesCollection
             {
-                new LineSeries
-                {
-                    Title = "Temp",
-                    Values = tempList
-                   // Labels = datetimeList
-                },
+                new LineSeries { Title = "Temp", Values = tempList, ScalesYAt = 0 },
+                new LineSeries { Title = "Light", Values = lightList, ScalesYAt = 1 },
+            };
+                AxisYCollection = new AxesCollection
+            {
+                new Axis { Title = "Y Axis 1 Temp", Foreground = Brushes.Gray },
+                new Axis { Title = "Y Axis 2 Light", Foreground = Brushes.Red },
+            };
+                AxisXCollection = new AxesCollection
+            {
+                new Axis { Title = "X Axis 1 DateTime", Foreground = Brushes.Gray, Labels = datetimearray   },
             };
 
-            
-            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" };
-            // temp chart end 
-            DataContext = this; // livechart 
-            
+                // temp chart end 
+                DataContext = this; // livechart 
+
+            }
+        }
+
+        private void If(bool v)
+        {
+            throw new NotImplementedException();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -106,6 +119,9 @@ namespace WpfApp1
 
         // temp chart 
         public SeriesCollection SeriesCollection { get; set; }
+        public AxesCollection AxisYCollection { get; set; }
+        public AxesCollection AxisXCollection { get; set; }
+
         public string[] Labels { get; set; }
     }
 }

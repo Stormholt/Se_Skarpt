@@ -56,6 +56,8 @@ namespace WpfApp1
             return date.ToOADate() + 2415018.5;
         }
 
+        
+
         public DataTable Filldata()
         {
             SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM TempAndHumit", myConnection);
