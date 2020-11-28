@@ -3,7 +3,6 @@ using Windows.Devices.Adc;
 
 namespace espSensors
 {
-
     class Photoresistor 
     {
         const int ADC_RESOLUTION = 4095; // ESP32 has 12 bit adc resolution 2^12 = 4096
