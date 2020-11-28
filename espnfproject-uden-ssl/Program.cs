@@ -29,24 +29,14 @@ namespace espnfproject
                 ESPclient client = new ESPclient();
                 client.ConnectToWifi();
                 client.ConnectToServer();
-                byte[] buffer;
-
 
                 while (true)
                 {
                     // setup buffer to read data from socket
                     client.command = Command.None;
-                    buffer = new byte[1024];
 
-                    // trying to read from socket
-                     int bytes = client.tcpclnt.Receive(buffer);
+                    client.ReadCommand();
 
-                    if (bytes > 0)
-                    {
-                        Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-                        client.command = client.command.FindCommand(new String(Encoding.UTF8.GetChars(buffer)));
-                    }
-                    buffer = new byte[1024];
                     switch (client.command.Value)
                     {
                         case 0://DISCONNNECT
@@ -55,26 +45,13 @@ namespace espnfproject
                             Thread.Sleep(Timeout.Infinite);
                             break;
                         case 1://SAYHELLO
-                            Debug.Write("Transmitting : Hello world !");
-                            buffer = Encoding.UTF8.GetBytes("Hello world !");
-                            client.tcpclnt.Send(buffer);
+                            client.SendHello();
                             break;
                         case 2://GETDATA
-                            string msg = $"{client.photoresistor.CalculateLumen()} ";
-                            buffer = Encoding.UTF8.GetBytes(msg);
-                            client.tcpclnt.Send(buffer);
-                             msg = $"{client.lm35.CalculateCelsius()}";
-                            buffer = new byte[1];
-                            buffer = Encoding.UTF8.GetBytes(msg);
-                            client.tcpclnt.Send(buffer);
-                            
+                            client.SendData();
                             break;
                         case 3://SETDATA
-                            bytes = client.tcpclnt.Receive(buffer);
-                            if (bytes > 0)
-                            {
-                                client.rgbled.controlLED(Ledcolor.Off.FindLedcolor( new String(Encoding.UTF8.GetChars(buffer))));
-                            }
+                            client.ReadRGBcolor();
                             break;
                         case 4: //NONE
                             break;
@@ -89,12 +66,6 @@ namespace espnfproject
 
             Thread.Sleep(Timeout.Infinite);
         }
-      
-       
-
-       
-
-      
     }
 
 
