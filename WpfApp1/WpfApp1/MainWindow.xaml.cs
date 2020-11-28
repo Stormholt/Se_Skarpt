@@ -20,6 +20,14 @@ using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.ComponentModel;
+using SeSkarpApplikation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.IO;
 
 
 namespace WpfApp1
@@ -29,27 +37,28 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        sqLitedatabase databaseObject = new sqLitedatabase();
+        //sqLitedatabase databaseObject = new sqLitedatabase();
         private double _value; // Angular Gauge
-
+        SeSkarptServer server = new SeSkarptServer();
 
         public MainWindow()
         {
             InitializeComponent();
             Filldata();
+            Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
 
             Value = 160; //Angular Gauge
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
-            string[] datetimearray = new string[databaseObject.Filldata().Rows.Count];
-            DateTime[] datetimestringarray = new DateTime[databaseObject.Filldata().Rows.Count];
+            string[] datetimearray = new string[server.databaseObject.Filldata().Rows.Count];
+            DateTime[] datetimestringarray = new DateTime[server.databaseObject.Filldata().Rows.Count];
 
-            for (int i = 0; i < databaseObject.Filldata().Rows.Count; i++)
+            for (int i = 0; i < server.databaseObject.Filldata().Rows.Count; i++)
             {
-                tempList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["temp"]));
-                lightList.Add(Convert.ToDouble(databaseObject.Filldata().Rows[i]["humit"]));
-                datetimearray[i] = DateTime.FromOADate((Double)databaseObject.Filldata().Rows[(databaseObject.Filldata().Rows.Count - 1)]["datetime"] - 2415018.5).ToString("g");
+                tempList.Add(Convert.ToDouble(server.databaseObject.Filldata().Rows[i]["temp"]));
+                lightList.Add(Convert.ToDouble(server.databaseObject.Filldata().Rows[i]["humit"]));
+                datetimearray[i] = DateTime.FromOADate((Double)server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["datetime"] - 2415018.5).ToString("g");
 
                 SeriesCollection = new SeriesCollection
             {
@@ -76,7 +85,7 @@ namespace WpfApp1
         {
             throw new NotImplementedException();
         }
-
+        /*
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             databaseObject.OpenConnection();
@@ -84,10 +93,81 @@ namespace WpfApp1
             databaseObject.CloseConnection();
             Filldata();
         }
+        */
 
         private void Filldata()
         {
-            Dataset.ItemsSource = databaseObject.Filldata().DefaultView;
+            Dataset.ItemsSource = server.databaseObject.Filldata().DefaultView;
+        }
+        private void SayHello_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SayHello);
+            server.ReadStringData();
+        }
+
+        private void LEDred_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Red);
+        }
+
+        private void LEDgreen_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Green);
+        }
+
+        private void LEDblue_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Blue);
+        }
+
+        private void LEDmagenta_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Magenta);
+        }
+
+        private void LEDcyan_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Cyan);
+        }
+
+        private void LEDyellow_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Yellow);
+        }
+
+        private void LEDwhite_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.White);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.SetData);
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Off);
+        }
+
+        private void Sample_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand(SeSkarptServer.Command.GetData);
+            server.ReadSensorData();
+            Filldata();
+        }
+        private void Disconnect_Click(object sender, RoutedEventArgs e)
+        {
+            server.DisconnectDevice();
+
+        }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            server.ConnectDevice();
         }
 
 
@@ -123,5 +203,70 @@ namespace WpfApp1
         public AxesCollection AxisXCollection { get; set; }
 
         public string[] Labels { get; set; }
+    }
+    public class MultiTextWriter : TextWriter
+    {
+        private IEnumerable<TextWriter> writers;
+        public MultiTextWriter(IEnumerable<TextWriter> writers)
+        {
+            this.writers = writers.ToList();
+        }
+        public MultiTextWriter(params TextWriter[] writers)
+        {
+            this.writers = writers;
+        }
+
+        public override void Write(char value)
+        {
+            foreach (var writer in writers)
+                writer.Write(value);
+        }
+
+        public override void Write(string value)
+        {
+            foreach (var writer in writers)
+                writer.Write(value);
+        }
+
+        public override void Flush()
+        {
+            foreach (var writer in writers)
+                writer.Flush();
+        }
+
+        public override void Close()
+        {
+            foreach (var writer in writers)
+                writer.Close();
+        }
+
+        public override Encoding Encoding
+        {
+            get { return Encoding.ASCII; }
+        }
+    }
+    public class ControlWriter : TextWriter
+    {
+        private TextBox textbox;
+        public ControlWriter(TextBox textbox)
+        {
+            this.textbox = textbox;
+        }
+
+        public override void Write(char value)
+        {
+            textbox.Text += value;
+
+        }
+
+        public override void Write(string value)
+        {
+            textbox.Text += value;
+        }
+
+        public override Encoding Encoding
+        {
+            get { return Encoding.ASCII; }
+        }
     }
 }
