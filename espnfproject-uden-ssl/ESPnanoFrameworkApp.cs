@@ -20,10 +20,10 @@ namespace ESPnanoFrameworkApp
 {
     
 
-    public class ESPclient
+     class ESPclient
     {
 
-        // Set the SSID & Password to your local WiFi network
+
         // Ajs mobil hotspot
         /*const string MYSSID = "AndroidAP7914";
         const string MYPASSWORD = "lqbk3422";
@@ -49,30 +49,34 @@ namespace ESPnanoFrameworkApp
 
         WiFiAdapter wifi;
         IPEndPoint ep;
-        Socket tcpclnt;
+        public Socket tcpclnt;
 
-        Command command = Command.None;
-        Ledcolor ledcolor = Ledcolor.Off;
-        RGBLED rgbled;
+        public Command command;
+        public Ledcolor ledcolor;
+        public RGBLED rgbled;
 
         AdcController adcController;
-        Photoresistor photoresistor;
-        LM35 lm35;
+        public Photoresistor photoresistor;
+        public LM35 lm35;
 
         public ESPclient()
         {
+            command = Command.None;
+            Ledcolor ledcolor = Ledcolor.Off;
             rgbled = new RGBLED(GpioController.GetDefault().OpenPin(LEDR_PIN),
                                 GpioController.GetDefault().OpenPin(LEDG_PIN),
                                 GpioController.GetDefault().OpenPin(LEDB_PIN));
             adcController = AdcController.GetDefault();
             adcController.ChannelMode = AdcChannelMode.SingleEnded;    // ADC value comes from a single point 
             photoresistor = new Photoresistor(adcController.OpenChannel(photoresistor_PIN));// ADC channel 0 - Photoresistor
+            lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
+
         }
 
 
 
 
-        private void ConnectToWifi()
+        public void ConnectToWifi()
         {
             wifi = WiFiAdapter.FindAllAdapters()[0];
             wifi.AvailableNetworksChanged += Wifi_AvailableNetworksChanged;
@@ -81,11 +85,15 @@ namespace ESPnanoFrameworkApp
             wifi.ScanAsync();
             Thread.Sleep(10000);
 
-            Socket tcpclnt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            tcpclnt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Debug.WriteLine("Created tcp client socket");
 
         }
-
+        /// <summary>
+        /// Event handler for when WiFi scan completes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void Wifi_AvailableNetworksChanged(WiFiAdapter sender, object e)
         {
             Debug.WriteLine("Wifi_AvailableNetworksChanged - get report");
@@ -121,13 +129,11 @@ namespace ESPnanoFrameworkApp
                     }
                 }
             }
-
-
         }
 
-        private void ConnectToServer()
+        public void ConnectToServer()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
+            ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
             Debug.WriteLine("Created endpoint to server");
             Debug.WriteLine("Connecting.....");
             tcpclnt.Connect(ep);

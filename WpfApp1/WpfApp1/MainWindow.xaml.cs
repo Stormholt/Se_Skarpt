@@ -47,7 +47,7 @@ namespace WpfApp1
             Filldata();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
 
-            Value = 160; //Angular Gauge
+            Value = 30; //Angular Gauge
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
@@ -77,7 +77,8 @@ namespace WpfApp1
 
                 // temp chart end 
                 DataContext = this; // livechart 
-
+               
+               
             }
         }
 
@@ -203,6 +204,11 @@ namespace WpfApp1
         public AxesCollection AxisXCollection { get; set; }
 
         public string[] Labels { get; set; }
+
+        private void AngularGauge_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+        }
     }
     public class MultiTextWriter : TextWriter
     {

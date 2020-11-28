@@ -26,67 +26,54 @@ namespace espnfproject
         {
             try
             {
-                
-                
-               
-
-               
-                
-
-                RGBLED rgbled = new RGBLED(GpioController.GetDefault().OpenPin(LEDR_PIN),
-                                             GpioController.GetDefault().OpenPin(LEDG_PIN),
-                                             GpioController.GetDefault().OpenPin(LEDB_PIN));
-
-                AdcController adcController = AdcController.GetDefault();
-                adcController.ChannelMode = AdcChannelMode.SingleEnded;    // ADC value comes from a single point 
-                Photoresistor photoresistor = new Photoresistor( adcController.OpenChannel(photoresistor_PIN));// ADC channel 0 - Photoresistor
-                LM35 lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
-
+                ESPclient client = new ESPclient();
+                client.ConnectToWifi();
+                client.ConnectToServer();
                 byte[] buffer;
 
 
                 while (true)
                 {
                     // setup buffer to read data from socket
-                    command = Command.None;
+                    client.command = Command.None;
                     buffer = new byte[1024];
 
                     // trying to read from socket
-                     int bytes = tcpclnt.Receive(buffer);
+                     int bytes = client.tcpclnt.Receive(buffer);
 
                     if (bytes > 0)
                     {
                         Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
-                        command = command.FindCommand(new String(Encoding.UTF8.GetChars(buffer)));
+                        client.command = client.command.FindCommand(new String(Encoding.UTF8.GetChars(buffer)));
                     }
                     buffer = new byte[1024];
-                    switch (command.Value)
+                    switch (client.command.Value)
                     {
                         case 0://DISCONNNECT
-                            rgbled.controlLED(Ledcolor.Off);
-                            tcpclnt.Close();
+                            client.rgbled.controlLED(Ledcolor.Off);
+                            client.tcpclnt.Close();
                             Thread.Sleep(Timeout.Infinite);
                             break;
                         case 1://SAYHELLO
                             Debug.Write("Transmitting : Hello world !");
                             buffer = Encoding.UTF8.GetBytes("Hello world !");
-                            tcpclnt.Send(buffer);
+                            client.tcpclnt.Send(buffer);
                             break;
                         case 2://GETDATA
-                            string msg = $"{photoresistor.CalculateLumen()} ";
+                            string msg = $"{client.photoresistor.CalculateLumen()} ";
                             buffer = Encoding.UTF8.GetBytes(msg);
-                            tcpclnt.Send(buffer);
-                             msg = $"{lm35.CalculateCelsius()}";
+                            client.tcpclnt.Send(buffer);
+                             msg = $"{client.lm35.CalculateCelsius()}";
                             buffer = new byte[1];
                             buffer = Encoding.UTF8.GetBytes(msg);
-                            tcpclnt.Send(buffer);
+                            client.tcpclnt.Send(buffer);
                             
                             break;
                         case 3://SETDATA
-                            bytes = tcpclnt.Receive(buffer);
+                            bytes = client.tcpclnt.Receive(buffer);
                             if (bytes > 0)
                             {
-                                rgbled.controlLED(Ledcolor.Off.FindLedcolor( new String(Encoding.UTF8.GetChars(buffer))));
+                                client.rgbled.controlLED(Ledcolor.Off.FindLedcolor( new String(Encoding.UTF8.GetChars(buffer))));
                             }
                             break;
                         case 4: //NONE
@@ -105,11 +92,7 @@ namespace espnfproject
       
        
 
-        /// <summary>
-        /// Event handler for when WiFi scan completes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+       
 
       
     }
