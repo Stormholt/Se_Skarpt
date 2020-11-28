@@ -8,8 +8,7 @@ using System;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.Security;
-using System.Security.Authentication;
+
 
 
 
@@ -24,7 +23,7 @@ public class tcpserver0
     [Flags]
     enum Command { GetData, SetData, Disconnect, None, SayHello }
     [Flags]
-    enum LED { Red, Blue, Green, Magenta, Cyan, Yellow, White, Off }
+    enum Ledcolor { Red, Blue, Green, Magenta, Cyan, Yellow, White, Off }
 
     public static void Main()
     {
@@ -43,13 +42,13 @@ public class tcpserver0
             Console.WriteLine("Connection accepted from " + client.RemoteEndPoint);
             ASCIIEncoding asen = new ASCIIEncoding();
             Command command = Command.None;
-            LED ledcolor = LED.Off;
+            Ledcolor ledcolor = Ledcolor.Off;
             bool foundflag = false;
-
+            byte[] buffer;
 
             while (client.Connected == true)
             {
-                byte[] b = new byte[100];
+               buffer = new byte[100];
                 int k = 0;
                 client.Send(asen.GetBytes(command.ToString()));
 
@@ -57,11 +56,11 @@ public class tcpserver0
                 switch (command)
                 {
                     case Command.SayHello:
-                        b = new byte[100];
-                        k = client.Receive(b);
+                        buffer = new byte[100];
+                        k = client.Receive(buffer);
                         Console.WriteLine("Received...");
                         for (int i = 0; i < k; i++)
-                            Console.Write(Convert.ToChar(b[i]));
+                            Console.Write(Convert.ToChar(buffer[i]));
                         command = Command.None;
                         break;
                     case Command.Disconnect:
@@ -71,11 +70,11 @@ public class tcpserver0
                         Environment.Exit(0);
                         break;
                     case Command.GetData:
-                        b = new byte[100];
-                        k = client.Receive(b);
+                        buffer = new byte[100];
+                        k = client.Receive(buffer);
                         Console.WriteLine("Received...");
                         for (int i = 0; i < k; i++)
-                            Console.Write(Convert.ToChar(b[i]));
+                            Console.Write(Convert.ToChar(buffer[i]));
                         Console.Write("\n");
                         command = Command.None;
                         break;
@@ -84,11 +83,11 @@ public class tcpserver0
                         {
                             Console.WriteLine("Please type valid LED color ( Red, Blue, Green, Magenta, Cyan, Yellow, White, Off): ");
                             string ledinput = Console.ReadLine();
-                            foreach (string color in Enum.GetNames(typeof(LED)))
+                            foreach (string color in Enum.GetNames(typeof(Ledcolor))) 
                             {
                                 if (color.Equals(ledinput))
                                 {
-                                    ledcolor = (LED)Enum.Parse(typeof(LED), color);
+                                    ledcolor = (Ledcolor)Enum.Parse(typeof(Ledcolor), color);
                                     foundflag = true;
                                 }
                             }

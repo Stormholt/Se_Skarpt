@@ -14,9 +14,6 @@ using espSensors;
 using SeSkarptEnumClasses;
 using RGBled;
 
-
-
-
 namespace espnfproject
 {
 
@@ -29,9 +26,14 @@ namespace espnfproject
         const string IP_ADDR = "192.168.43.61";*/
 
         // Ajs hjemme wifi
-        const string MYSSID = "WiFimodem-BAB4";
-        const string MYPASSWORD = "gjz4gjzntz";
-        const string IP_ADDR = "192.168.0.13";
+        /* const string MYSSID = "WiFimodem-BAB4";
+         const string MYPASSWORD = "gjz4gjzntz";
+         const string IP_ADDR = "192.168.0.13";*/
+
+        //Jeppe hotspot
+        const string MYSSID = "ajsertilguys";
+        const string MYPASSWORD = "ajsajsbby";
+        const string IP_ADDR = "192.168.43.15";
 
         const int TCP_PORT = 8001;
 
@@ -45,9 +47,7 @@ namespace espnfproject
         {
             try
             {
-                // Get the first WiFI Adapter
                 WiFiAdapter wifi = WiFiAdapter.FindAllAdapters()[0];
-                // Set up the AvailableNetworksChanged event to pick up when scan has completed
                 wifi.AvailableNetworksChanged += Wifi_AvailableNetworksChanged;
 
                 Debug.WriteLine("starting WiFi scan");
@@ -56,11 +56,9 @@ namespace espnfproject
                 
                 Socket tcpclnt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Debug.WriteLine("Created tcp client socket");
-                // need an IPEndPoint from that one above
                 
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
                 Debug.WriteLine("Created endpoint to server");
-                //TcpClient tcpclnt = new TcpClient();
                 Debug.WriteLine("Connecting.....");
                 tcpclnt.Connect(ep);
                 Debug.WriteLine("Connected to server");
@@ -99,18 +97,24 @@ namespace espnfproject
                     switch (command.Value)
                     {
                         case 0://DISCONNNECT
+                            rgbled.controlLED(Ledcolor.Off);
                             tcpclnt.Close();
                             Thread.Sleep(Timeout.Infinite);
                             break;
                         case 1://SAYHELLO
-                            Debug.Write("Transmitting hello world : ");
-                            buffer = Encoding.UTF8.GetBytes("Hello world !\r\n");
+                            Debug.Write("Transmitting : Hello world !");
+                            buffer = Encoding.UTF8.GetBytes("Hello world !");
                             tcpclnt.Send(buffer);
                             break;
                         case 2://GETDATA
-                            string msg = $"Light level: {photoresistor.CalculateLumen()} Lumen, Temperature: {lm35.CalculateCelsius()}C";
+                            string msg = $"{photoresistor.CalculateLumen()} ";
                             buffer = Encoding.UTF8.GetBytes(msg);
                             tcpclnt.Send(buffer);
+                             msg = $"{lm35.CalculateCelsius()}";
+                            buffer = new byte[1];
+                            buffer = Encoding.UTF8.GetBytes(msg);
+                            tcpclnt.Send(buffer);
+                            
                             break;
                         case 3://SETDATA
                             bytes = tcpclnt.Receive(buffer);

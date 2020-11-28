@@ -13,9 +13,7 @@ namespace RGBled
         public GpioPin B { get; private set; }
 
         public GpioPinDriveMode mode { get; private set; }
-
         public Ledcolor ledcolor { get; private set; }
-
         public RGBLED(GpioPin red, GpioPin green, GpioPin blue)
         {
             R = red;
@@ -27,9 +25,7 @@ namespace RGBled
             G.SetDriveMode(mode);
             B.SetDriveMode(mode);
             controlLED(ledcolor);
-
         }
-
         public void controlLED(Ledcolor color)
         {
             if (Ledcolor.Red.Equals(color))
@@ -60,7 +56,6 @@ namespace RGBled
                 this.G.Write(GpioPinValue.Low);
                 this.B.Write(GpioPinValue.High);
 
-                Debug.WriteLine(ledcolor.Name);
             }
             else if (Ledcolor.Cyan.Equals(color))
             {

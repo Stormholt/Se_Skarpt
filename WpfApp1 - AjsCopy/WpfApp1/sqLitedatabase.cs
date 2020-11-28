@@ -5,7 +5,8 @@ using System.Data.SQLite;
 using System.IO;
 using System.Data;
 
-namespace WpfApp1
+namespace SQLiteDatabase
+
 {
     class sqLitedatabase
     {
