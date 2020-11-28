@@ -37,8 +37,6 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        //sqLitedatabase databaseObject = new sqLitedatabase();
-        private double _value; // Angular Gauge
         SeSkarptServer server = new SeSkarptServer();
 
         public MainWindow()
@@ -46,8 +44,9 @@ namespace WpfApp1
             InitializeComponent();
             Filldata();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
+            LightGauge.Value = Convert.ToDouble(server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["humit"]); //Angular Gauge
+            TempGauge.Value = Convert.ToDouble(server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["temp"]); //Angular Gauge
 
-            Value = 30; //Angular Gauge
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
@@ -77,24 +76,10 @@ namespace WpfApp1
 
                 // temp chart end 
                 DataContext = this; // livechart 
-               
-               
+
             }
         }
 
-        private void If(bool v)
-        {
-            throw new NotImplementedException();
-        }
-        /*
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            databaseObject.OpenConnection();
-            databaseObject.sendData(1, 2);
-            databaseObject.CloseConnection();
-            Filldata();
-        }
-        */
 
         private void Filldata()
         {
@@ -172,44 +157,14 @@ namespace WpfApp1
         }
 
 
-
-        //Angular Gauge
-        public double Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                OnPropertyChanged("Value");
-            }
-        }
-
-        private void ChangeValueOnClick(object sender, RoutedEventArgs e)
-        {
-            Value = new Random().Next(50, 250);
-        }
-
-
-            public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        //Angular Gauge end 
-
         // temp chart 
         public SeriesCollection SeriesCollection { get; set; }
         public AxesCollection AxisYCollection { get; set; }
         public AxesCollection AxisXCollection { get; set; }
 
         public string[] Labels { get; set; }
-
-        private void AngularGauge_Loaded(object sender, RoutedEventArgs e)
-        {
-           
-        }
     }
+
     public class MultiTextWriter : TextWriter
     {
         private IEnumerable<TextWriter> writers;

@@ -28,14 +28,13 @@
                         
                     </Grid.RowDefinitions>
                     
-                    <Button Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Margin="10" Width="100" Height="20" Click="ChangeValueOnClick">Update</Button>
 
                     <TextBlock Text="Temp" FontWeight="Bold" FontSize="30" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <lvc:AngularGauge x:Name="tempGauge" Grid.Column="1" Grid.Row="1" FromValue="0" ToValue="30" 
+                    <lvc:AngularGauge Name="TempGauge" Grid.Column="1" Grid.Row="1" FromValue="0" ToValue="30" 
                           LabelsStep="2" TicksStep="25" Wedge="300"
                           TicksForeground="White" Foreground="White" 
                           FontWeight="Bold" FontSize="14"
-                          SectionsInnerRadius=".5" Loaded="AngularGauge_Loaded">
+                          SectionsInnerRadius=".5">
                         <lvc:AngularGauge.Sections>
                             <lvc:AngularSection FromValue="0" ToValue="5" Fill="#03cafc"/>
                             <lvc:AngularSection FromValue="5" ToValue="25" Fill="#9893b8"/>
@@ -44,7 +43,7 @@
                     </lvc:AngularGauge>
 
                     <TextBlock Text="Light" FontWeight="Bold" FontSize="30" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <lvc:AngularGauge x:Name="lightGauge" Grid.Column="3" Grid.Row="1" Value="{Binding Value}" FromValue="0" ToValue="60" 
+                    <lvc:AngularGauge Name="LightGauge" Grid.Column="3" Grid.Row="1" FromValue="0" ToValue="60" 
                           LabelsStep="5" TicksStep="25" Wedge="300"
                           TicksForeground="White" Foreground="White" 
                           FontWeight="Bold" FontSize="16"
