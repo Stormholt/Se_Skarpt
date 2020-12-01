@@ -37,7 +37,8 @@ namespace ESPnanoFrameworkApp
         //Jeppe hotspot
         const string MYSSID = "ajsertilguys";
         const string MYPASSWORD = "ajsajsbby";
-        const string IP_ADDR = "192.168.43.15";
+        // const string IP_ADDR = "192.168.43.15";
+        const string IP_ADDR = "130.226.22.57";
 
         const int TCP_PORT = 8001;
 
@@ -70,11 +71,7 @@ namespace ESPnanoFrameworkApp
             adcController.ChannelMode = AdcChannelMode.SingleEnded;    // ADC value comes from a single point 
             photoresistor = new Photoresistor(adcController.OpenChannel(photoresistor_PIN));// ADC channel 0 - Photoresistor
             lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
-
         }
-
-
-
 
         public void ConnectToWifi()
         {
@@ -140,5 +137,48 @@ namespace ESPnanoFrameworkApp
             Debug.WriteLine("Connected to server");
 
         }
+
+        private byte[] Read() { 
+        
+            byte[] buffer = new byte[20];
+            int bytes = tcpclnt.Receive(buffer);
+            Debug.WriteLine(new String(Encoding.UTF8.GetChars(buffer)));
+            return buffer;
+        }
+
+        public void ReadCommand()
+        {
+            command = command.FindCommand(new String(Encoding.UTF8.GetChars(Read())));
+        }
+
+        public void ReadRGBcolor()
+        {
+            rgbled.controlLED(Ledcolor.Off.FindLedcolor(new String(Encoding.UTF8.GetChars(Read()))));
+        }
+
+        private void Send(byte[] buffer)
+        {
+            tcpclnt.Send(buffer);
+        }
+
+        public void SendData()
+        {
+            byte[] buffer = new byte[1];
+            string msg = $"{photoresistor.CalculateLumen()} ";
+            buffer = Encoding.UTF8.GetBytes(msg);
+            Send(buffer);
+            msg = $"{lm35.CalculateCelsius()}";
+            buffer = new byte[1];
+            buffer = Encoding.UTF8.GetBytes(msg);
+            Send(buffer);
+        }
+
+        public void SendHello()
+        {
+            byte[] buffer = new byte[10];
+            buffer = Encoding.UTF8.GetBytes("Hello world !");
+            Send(buffer);
+        }
+
     }
 }
