@@ -63,10 +63,7 @@ namespace SQLiteDatabase
             SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM TempAndHumit", myConnection);
             SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd);
             DataTable dt = new DataTable("Dataset");
-
             sda.Fill(dt);
-
-            //Dataset.ItemsSource = dt.DefaultView;
             return dt;
         }
     }

@@ -89,10 +89,20 @@
                         <RowDefinition Height="5*" />
                         <RowDefinition Height="0.5*"/>
                     </Grid.RowDefinitions>
-
-                    <lvc:CartesianChart Series="{Binding SeriesCollection}" AxisY="{Binding AxisYCollection}" AxisX="{Binding AxisXCollection}" LegendLocation="Right" Grid.Column="1" Grid.Row="1" >
+                    <lvc:CartesianChart Grid.Row="1"  Grid.Column="1" >
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Name="TempX"  Foreground="DodgerBlue" Title="Temp" Position="RightTop"/>
+                            <lvc:Axis Name="LightX" Foreground="IndianRed" Title="Light" Position="RightTop"/>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Name="TimeDateChart" Title="Time" Position="LeftBottom"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.Series>
+                            <lvc:LineSeries Name="TempChart" ScalesYAt="0"/>
+                            <lvc:LineSeries Name="LightChart" ScalesYAt="1"/>
+                        </lvc:CartesianChart.Series>
+                       
                     </lvc:CartesianChart>
-                    
 
                 </Grid>
             </TabItem>

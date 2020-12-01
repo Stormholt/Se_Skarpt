@@ -1,32 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data;
-using System.Data.SQLite;
-//using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Data;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
-using System.ComponentModel;
 using SeSkarpApplikation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
 using System.IO;
 
 
@@ -42,53 +24,53 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            Filldata();
+            Filldatagrid();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
-            LightGauge.Value = Convert.ToDouble(server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["humit"]); //Angular Gauge
-            TempGauge.Value = Convert.ToDouble(server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["temp"]); //Angular Gauge
+            WpfAddData();
+        }
+
+        private void WpfAddData()
+        {
+            InitializeComponent();
+            DataTable local_DataTable = server.databaseObject.Filldata();
+            LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["humit"]); //Angular Gauge
+            TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
 
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
-            string[] datetimearray = new string[server.databaseObject.Filldata().Rows.Count];
-            DateTime[] datetimestringarray = new DateTime[server.databaseObject.Filldata().Rows.Count];
+            ChartValues<string> timeList = new ChartValues<string>();
 
-            for (int i = 0; i < server.databaseObject.Filldata().Rows.Count; i++)
+            for (int i = 0; i < local_DataTable.Rows.Count; i++)
             {
-                tempList.Add(Convert.ToDouble(server.databaseObject.Filldata().Rows[i]["temp"]));
-                lightList.Add(Convert.ToDouble(server.databaseObject.Filldata().Rows[i]["humit"]));
-                datetimearray[i] = DateTime.FromOADate((Double)server.databaseObject.Filldata().Rows[(server.databaseObject.Filldata().Rows.Count - 1)]["datetime"] - 2415018.5).ToString("g");
-
-                SeriesCollection = new SeriesCollection
-            {
-                new LineSeries { Title = "Temp", Values = tempList, ScalesYAt = 0 },
-                new LineSeries { Title = "Light", Values = lightList, ScalesYAt = 1 },
-            };
-                AxisYCollection = new AxesCollection
-            {
-                new Axis { Title = "Y Axis 1 Temp", Foreground = Brushes.Gray },
-                new Axis { Title = "Y Axis 2 Light", Foreground = Brushes.Red },
-            };
-                AxisXCollection = new AxesCollection
-            {
-                new Axis { Title = "X Axis 1 DateTime", Foreground = Brushes.Gray, Labels = datetimearray   },
-            };
-
-                // temp chart end 
-                DataContext = this; // livechart 
-
+                tempList.Add(Convert.ToDouble(local_DataTable.Rows[i]["temp"]));
+                lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["humit"]));
+                timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g"));
             }
+            TempChart.Values = tempList;
+            LightChart.Values = lightList;
+            TimeDateChart.Labels = timeList;
+            // temp chart end 
+            DataContext = this; // livechart 
         }
 
 
-        private void Filldata()
+        private void Filldatagrid()
         {
             Dataset.ItemsSource = server.databaseObject.Filldata().DefaultView;
         }
         private void SayHello_Click(object sender, RoutedEventArgs e)
         {
-            server.SendCommand(SeSkarptServer.Command.SayHello);
-            server.ReadStringData();
+            // server.SendCommand(SeSkarptServer.Command.SayHello);
+            //server.ReadStringData();
+            server.databaseObject.OpenConnection();
+            server.databaseObject.sendData(2000, 34);
+            server.databaseObject.CloseConnection();
+            //SectionsCollection[1].
+            server.databaseObject.Filldata();
+            //server.databaseObject.CloseConnection();
+            Filldatagrid();
+            WpfAddData();
         }
 
         private void LEDred_Click(object sender, RoutedEventArgs e)
@@ -143,7 +125,7 @@ namespace WpfApp1
         {
             server.SendCommand(SeSkarptServer.Command.GetData);
             server.ReadSensorData();
-            Filldata();
+            Filldatagrid();
         }
         private void Disconnect_Click(object sender, RoutedEventArgs e)
         {
@@ -155,6 +137,8 @@ namespace WpfApp1
         {
             server.ConnectDevice();
         }
+        public ChartValues<double> Values1 { get; set; }
+        public ChartValues<double> Values2 { get; set; }
 
 
         // temp chart 
