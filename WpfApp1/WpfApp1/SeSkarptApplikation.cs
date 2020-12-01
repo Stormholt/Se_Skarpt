@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Threading;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
@@ -12,15 +12,16 @@ namespace SeSkarpApplikation
     class SeSkarptServer
     {
         //const string IP_ADDR = "192.168.43.61"; // IP med Ajs hotspot
-        // const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
-        const string IP_ADDR = "192.168.43.15"; // IP med Jeppe hotspot
+        const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
+                                               //  const string IP_ADDR = "192.168.43.15"; // IP med Jeppe hotspot
         const int TCP_PORT = 8001;
+        public const int THREAD_SLEEP_TIME_SEC = 10;
 
-
+        private static Mutex mutex = new Mutex();
         public enum Command { GetData, SetData, Disconnect, None, SayHello }
         public enum Ledcolor { Red, Blue, Green, Magenta, Cyan, Yellow, White, Off }
 
-        public Command command {get; set ;} 
+        public Command command { get; set; }
         public Ledcolor ledcolor { get; set; }
 
         private TcpListener listener = null;
@@ -29,7 +30,7 @@ namespace SeSkarpApplikation
 
         public sqLitedatabase databaseObject = null; 
 
-
+        public bool connected { get; private set; }
         public SeSkarptServer()
         {
             command = Command.None;
@@ -37,19 +38,40 @@ namespace SeSkarpApplikation
             listener = new TcpListener(IPAddress.Parse(IP_ADDR), TCP_PORT);
             asen = new ASCIIEncoding();
             databaseObject = new sqLitedatabase();
+            connected = false;
         }
 
+        public void ThreadMethod()
+        {
+            Console.WriteLine("Hello from Thread");
+            while (true)
+            {
+                if (connected == true)
+                {
+                    Console.WriteLine("Thread sampling");
+                    ReadSensorData();
+                    Thread.Sleep(THREAD_SLEEP_TIME_SEC * 1000);
+
+                    Console.WriteLine("Thread not sampling");
+                    Thread.Sleep(THREAD_SLEEP_TIME_SEC * 1000);
+                }
+            }
+        }
         public void SendLEDCommand(Ledcolor ledcolor)
         {
             this.ledcolor = ledcolor;
+            mutex.WaitOne();
             client.Send(asen.GetBytes(ledcolor.ToString()));
+            mutex.ReleaseMutex();
             Console.WriteLine($"LED color {ledcolor.ToString()} sent \r");
         }
 
         public void SendCommand(Command command)
         {
             this.command = command;
+            mutex.WaitOne();
             client.Send(asen.GetBytes(command.ToString()));
+            mutex.ReleaseMutex();
             Console.WriteLine($"Command {command.ToString()} sent");
             this.command = Command.None;
         }
@@ -57,7 +79,9 @@ namespace SeSkarpApplikation
         public void ReadStringData()
         {
             byte[] buffer = new byte[100];
+            mutex.WaitOne();
             int k = client.Receive(buffer);
+            mutex.ReleaseMutex();
             Console.Write("Received: ");
             for (int i = 0; i < k; i++)
                 Console.Write(Convert.ToChar(buffer[i]));
@@ -66,44 +90,51 @@ namespace SeSkarpApplikation
 
         public void ReadSensorData()
         {
-            List<int> dataList = new List<int>();
             int temp = 0;
             int light = 0;
             byte[] buffer = new byte[10];
+            mutex.WaitOne();
             int k = client.Receive(buffer);
             Console.Write("Received : ");
             light =  Convert.ToInt32(buffer[0]);
             Console.Write($"{light} ");
             buffer = new byte[10];
-            dataList = new List<int>();
             k = client.Receive(buffer);
             temp = Convert.ToInt32(buffer[0]);
             Console.Write($"{temp} ");
             Console.Write("\n");
             Write2Database(temp, light);
-            
+            mutex.ReleaseMutex();
         }
 
         public void ConnectDevice()
         {
-            try
+            if (listener.LocalEndpoint != null)
             {
-                listener.Start();
-                Console.WriteLine("TCP server online at {0}", listener.LocalEndpoint);
-                Console.WriteLine("Waiting for a connection.....");
-                client = listener.AcceptSocket();
-                Console.WriteLine("Connection accepted from " + client.RemoteEndPoint);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error..... " + e.StackTrace);
+                try
+                {
+                    listener.Start();
+                    Console.WriteLine("TCP server online at {0}", listener.LocalEndpoint);
+                    Console.WriteLine("Waiting for a connection.....");
+                    client = listener.AcceptSocket();
+                    Console.WriteLine("Connection accepted from " + client.RemoteEndPoint);
+                    connected = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error..... " + e.StackTrace);
+                }
             }
         }
 
         public void DisconnectDevice()
         {
+
             SendCommand(Command.Disconnect);
+            connected = false;
+            mutex.WaitOne();
             client.Close();
+            mutex.ReleaseMutex();
             Console.WriteLine("Device disconnected");
             listener.Stop();
             Console.WriteLine("TCP server offline...");

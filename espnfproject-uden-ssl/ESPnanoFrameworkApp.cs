@@ -30,15 +30,15 @@ namespace ESPnanoFrameworkApp
         const string IP_ADDR = "192.168.43.61";*/
 
         // Ajs hjemme wifi
-        /* const string MYSSID = "WiFimodem-BAB4";
-         const string MYPASSWORD = "gjz4gjzntz";
-         const string IP_ADDR = "192.168.0.13";*/
+        const string MYSSID = "WiFimodem-BAB4";
+        const string MYPASSWORD = "gjz4gjzntz";
+        const string IP_ADDR = "192.168.0.13";
 
         //Jeppe hotspot
-        const string MYSSID = "ajsertilguys";
+        /*const string MYSSID = "ajsertilguys";
         const string MYPASSWORD = "ajsajsbby";
         // const string IP_ADDR = "192.168.43.15";
-        const string IP_ADDR = "130.226.22.57";
+        const string IP_ADDR = "130.226.22.57";*/
 
         const int TCP_PORT = 8001;
 

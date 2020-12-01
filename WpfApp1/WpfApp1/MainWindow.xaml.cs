@@ -5,11 +5,12 @@ using System.Text;
 using System.Windows;
 using System.Data;
 using System.Windows.Controls;
-using System.Windows.Media;
+
 using LiveCharts;
 using LiveCharts.Wpf;
 using SeSkarpApplikation;
 using System.IO;
+using System.Timers;
 
 
 namespace WpfApp1
@@ -17,9 +18,12 @@ namespace WpfApp1
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial  class MainWindow : Window
     {
-        SeSkarptServer server = new SeSkarptServer();
+       static SeSkarptServer server = new SeSkarptServer();
+        public const int THREAD_SLEEP_TIME_SEC = 10;
+        private Timer aTimer;
+        
 
         public MainWindow()
         {
@@ -27,6 +31,10 @@ namespace WpfApp1
             Filldatagrid();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
             WpfAddData();
+            /*Thread thread = new Thread(new ThreadStart(ThreadMethod));
+            thread.Start();*/
+            SetTimer();
+           
         }
 
         private void WpfAddData()
@@ -54,6 +62,23 @@ namespace WpfApp1
             DataContext = this; // livechart 
         }
 
+        private void SetTimer()
+        {
+            // Create a timer with a two second interval.
+             aTimer = new Timer(THREAD_SLEEP_TIME_SEC*1000);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += ThreadMethod;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private void ThreadMethod(Object source, ElapsedEventArgs e) {
+            if (server.connected == true)
+            {
+                
+                Sample_Click(null, null);
+            }
+        }
 
         private void Filldatagrid()
         {
@@ -61,16 +86,9 @@ namespace WpfApp1
         }
         private void SayHello_Click(object sender, RoutedEventArgs e)
         {
-            // server.SendCommand(SeSkarptServer.Command.SayHello);
-            //server.ReadStringData();
-            server.databaseObject.OpenConnection();
-            server.databaseObject.sendData(2000, 34);
-            server.databaseObject.CloseConnection();
-            //SectionsCollection[1].
-            server.databaseObject.Filldata();
-            //server.databaseObject.CloseConnection();
-            Filldatagrid();
-            WpfAddData();
+             server.SendCommand(SeSkarptServer.Command.SayHello);
+            server.ReadStringData();
+          
         }
 
         private void LEDred_Click(object sender, RoutedEventArgs e)
@@ -123,13 +141,20 @@ namespace WpfApp1
 
         private void Sample_Click(object sender, RoutedEventArgs e)
         {
-            server.SendCommand(SeSkarptServer.Command.GetData);
-            server.ReadSensorData();
-            Filldatagrid();
+            this.Dispatcher.Invoke(() =>
+            { 
+               server.SendCommand(SeSkarptServer.Command.GetData);
+                server.ReadSensorData();
+                server.databaseObject.Filldata();
+                Filldatagrid();
+                WpfAddData();
+             });
+           
         }
         private void Disconnect_Click(object sender, RoutedEventArgs e)
         {
             server.DisconnectDevice();
+
 
         }
 
@@ -160,31 +185,26 @@ namespace WpfApp1
         {
             this.writers = writers;
         }
-
         public override void Write(char value)
         {
             foreach (var writer in writers)
                 writer.Write(value);
         }
-
         public override void Write(string value)
         {
             foreach (var writer in writers)
                 writer.Write(value);
         }
-
         public override void Flush()
         {
             foreach (var writer in writers)
                 writer.Flush();
         }
-
         public override void Close()
         {
             foreach (var writer in writers)
                 writer.Close();
         }
-
         public override Encoding Encoding
         {
             get { return Encoding.ASCII; }
@@ -197,18 +217,14 @@ namespace WpfApp1
         {
             this.textbox = textbox;
         }
-
         public override void Write(char value)
         {
             textbox.Text += value;
-
         }
-
         public override void Write(string value)
         {
             textbox.Text += value;
         }
-
         public override Encoding Encoding
         {
             get { return Encoding.ASCII; }
