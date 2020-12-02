@@ -41,9 +41,15 @@ namespace WpfApp1
         {
             InitializeComponent();
             DataTable local_DataTable = server.databaseObject.Filldata();
-            LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Angular Gauge
-            TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
+            if (local_DataTable.Rows.Count == 0)
+            {
+                return;
+            }
 
+             LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["light"]); //Angular Gauge
+             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["temp"]); //Angular Gauge
+                
+            
             // Temp chat
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
@@ -174,14 +180,6 @@ namespace WpfApp1
         }
         public ChartValues<double> Values1 { get; set; }
         public ChartValues<double> Values2 { get; set; }
-
-
-        // temp chart 
-        public SeriesCollection SeriesCollection { get; set; }
-        public AxesCollection AxisYCollection { get; set; }
-        public AxesCollection AxisXCollection { get; set; }
-
-        public string[] Labels { get; set; }
     }
 
     public class MultiTextWriter : TextWriter
