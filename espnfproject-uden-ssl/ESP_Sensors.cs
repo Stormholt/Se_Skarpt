@@ -53,7 +53,7 @@ namespace espSensors
 
     class LM35
     {
-        const double conversion = 4.048;
+        const double conversion = 8.048;
         AdcChannel adcChannel;
         int measurement;
         public LM35()
