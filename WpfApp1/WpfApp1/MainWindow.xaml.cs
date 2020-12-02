@@ -41,7 +41,7 @@ namespace WpfApp1
         {
             InitializeComponent();
             DataTable local_DataTable = server.databaseObject.Filldata();
-            LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["humit"]); //Angular Gauge
+            LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Angular Gauge
             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
 
             // Temp chat
@@ -52,7 +52,7 @@ namespace WpfApp1
             for (int i = 0; i < local_DataTable.Rows.Count; i++)
             {
                 tempList.Add(Convert.ToDouble(local_DataTable.Rows[i]["temp"]));
-                lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["humit"]));
+                lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["light"]));
                 timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g"));
             }
             TempChart.Values = tempList;
@@ -66,9 +66,9 @@ namespace WpfApp1
         {
                 DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable,
                 TempChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["temp"])); // Temp - Chart
-                LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["humit"])); // Light - Chart
+                LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["light"])); // Light - Chart
                 TimeDateChart.Labels.Add(DateTime.FromOADate((Double)local_DataTable.Rows[local_DataTable.Rows.Count - 1]["datetime"] - 2415018.5).ToString("g")); // TimeDate - Chart 
-                LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["humit"]); //Light - Angular Gauge
+                LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Light - Angular Gauge
                 TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Temp - Angular Gauge
         }
 
