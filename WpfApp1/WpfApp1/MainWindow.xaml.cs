@@ -29,7 +29,11 @@ namespace WpfApp1
             WpfAddData();
         }
 
-        private void WpfAddData()
+        /// <summary>
+        /// Initializing the data into the charts axis’s and gauges,
+        /// but first creating a local datatable 
+        /// </summary>
+        private void WpfAddData() 
         {
             InitializeComponent();
             DataTable local_DataTable = server.databaseObject.Filldata();
@@ -40,8 +44,7 @@ namespace WpfApp1
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
             ChartValues<string> timeList = new ChartValues<string>();
-
-            for (int i = 0; i < local_DataTable.Rows.Count; i++)
+             for (int i = 0; i < local_DataTable.Rows.Count; i++)
             {
                 tempList.Add(Convert.ToDouble(local_DataTable.Rows[i]["temp"]));
                 lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["humit"]));
@@ -54,6 +57,16 @@ namespace WpfApp1
             DataContext = this; // livechart 
         }
 
+        private void UpdateData()
+        {
+            DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable,
+            TempChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count-1]["temp"])); // Temp - Chart
+            LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count-1]["humit"])); // Light - Chart
+            TimeDateChart.Labels.Add(DateTime.FromOADate((Double)local_DataTable.Rows[local_DataTable.Rows.Count-1]["datetime"] - 2415018.5).ToString("g")); // TimeDate - Chart 
+            LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["humit"]); //Light - Angular Gauge
+            TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Temp - Angular Gauge
+        }
+
 
         private void Filldatagrid()
         {
@@ -63,14 +76,16 @@ namespace WpfApp1
         {
             // server.SendCommand(SeSkarptServer.Command.SayHello);
             //server.ReadStringData();
-            server.databaseObject.OpenConnection();
-            server.databaseObject.sendData(2000, 34);
-            server.databaseObject.CloseConnection();
-            //SectionsCollection[1].
-            server.databaseObject.Filldata();
+            //server.databaseObject.OpenConnection();
+            //server.databaseObject.sendData(2000, 34);
             //server.databaseObject.CloseConnection();
-            Filldatagrid();
-            WpfAddData();
+            //SectionsCollection[1].
+            //server.databaseObject.Filldata();
+            //server.databaseObject.CloseConnection();
+            //Filldatagrid();
+            //WpfAddData();
+            UpdateData();
+
         }
 
         private void LEDred_Click(object sender, RoutedEventArgs e)
