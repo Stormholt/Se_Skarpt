@@ -44,8 +44,8 @@ namespace WpfApp1
                 return;
             }
 
-             LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["light"]); //Angular Gauge
-             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["temp"]); //Angular Gauge
+             LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Angular Gauge
+             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
                 
             
             // Temp chat
@@ -67,7 +67,7 @@ namespace WpfApp1
         }
 
         private void UpdateData()
-        {
+        {   
                 DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable,
                 TempChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["temp"])); // Temp - Chart
                 LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["light"])); // Light - Chart

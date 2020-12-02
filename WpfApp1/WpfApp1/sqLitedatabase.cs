@@ -41,7 +41,7 @@ namespace SQLiteDatabase
         public void sendData(int temp, int light)
         {
             
-            string query = "INSERT INTO TempAndHumit (`temp`, `light`, `datetime`) VALUES (@temp, @light, @datetime)";
+            string query = "INSERT INTO TempAndLight (`temp`, `light`, `datetime`) VALUES (@temp, @light, @datetime)";
             SQLiteCommand myCommand = new SQLiteCommand(query, myConnection);
             myCommand.Parameters.AddWithValue("@temp", temp);
             myCommand.Parameters.AddWithValue("@light", light);

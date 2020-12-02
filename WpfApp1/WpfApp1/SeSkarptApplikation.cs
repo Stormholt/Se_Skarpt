@@ -88,13 +88,12 @@ namespace SeSkarpApplikation
             Console.Write("Received : ");
             msg = Encoding.ASCII.GetString(lightBuffer);
             light = Int32.Parse(msg);
-            Console.WriteLine($"{light}");
-
+            Console.Write($"{light} lm ");
 
             k = client.Receive(tempBuffer);
             msg = Encoding.ASCII.GetString(tempBuffer);
             temp = Int32.Parse(msg);
-            Console.WriteLine($"{temp}");
+            Console.WriteLine($"{temp} C");
 
             Write2Database(temp, light);
            
