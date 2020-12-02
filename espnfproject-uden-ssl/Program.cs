@@ -2,17 +2,9 @@ using System;
 //Nanoframework specific classes
 using System.Threading;
 using System.Diagnostics;
-using Windows.Devices.WiFi;
-using Windows.Devices.Adc;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using Windows.Devices.Gpio;
 
 //Classes created for this project
-using espSensors;
 using SeSkarptEnumClasses;
-using RGBled;
 using ESPnanoFrameworkApp;
 
 namespace espnfproject
@@ -20,8 +12,7 @@ namespace espnfproject
 
     public class Program
     {
-       
-        
+
         public static void Main()
         {
             try
