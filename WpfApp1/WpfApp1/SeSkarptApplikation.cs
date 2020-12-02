@@ -4,7 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using SQLiteDatabase;
-using System.Collections.Generic;
+
 
 
 namespace SeSkarpApplikation
@@ -12,8 +12,8 @@ namespace SeSkarpApplikation
     class SeSkarptServer
     {
         //const string IP_ADDR = "192.168.43.61"; // IP med Ajs hotspot
-        const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
-                                               //  const string IP_ADDR = "192.168.43.15"; // IP med Jeppe hotspot
+      //  const string IP_ADDR = "192.168.0.13"; // IP hos Ajs Tobaksvejen 2c
+        const string IP_ADDR = "192.168.43.15"; // IP med Jeppe hotspot
         const int TCP_PORT = 8001;
         public const int THREAD_SLEEP_TIME_SEC = 10;
 

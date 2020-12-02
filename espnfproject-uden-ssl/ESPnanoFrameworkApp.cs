@@ -30,15 +30,15 @@ namespace ESPnanoFrameworkApp
         const string IP_ADDR = "192.168.43.61";*/
 
         // Ajs hjemme wifi
-        const string MYSSID = "WiFimodem-BAB4";
-        const string MYPASSWORD = "gjz4gjzntz";
-        const string IP_ADDR = "192.168.0.13";
+        /*   const string MYSSID = "WiFimodem-BAB4";
+           const string MYPASSWORD = "gjz4gjzntz";
+           const string IP_ADDR = "192.168.0.13";*/
 
         //Jeppe hotspot
-        /*const string MYSSID = "ajsertilguys";
+        const string MYSSID = "ajsertilguys";
         const string MYPASSWORD = "ajsajsbby";
-        // const string IP_ADDR = "192.168.43.15";
-        const string IP_ADDR = "130.226.22.57";*/
+         const string IP_ADDR = "192.168.43.15";
+   
 
         const int TCP_PORT = 8001;
 
@@ -59,6 +59,7 @@ namespace ESPnanoFrameworkApp
         AdcController adcController;
         public Photoresistor photoresistor;
         public LM35 lm35;
+        public bool connected { get; private set; }
 
         public ESPclient()
         {
@@ -71,6 +72,7 @@ namespace ESPnanoFrameworkApp
             adcController.ChannelMode = AdcChannelMode.SingleEnded;    // ADC value comes from a single point 
             photoresistor = new Photoresistor(adcController.OpenChannel(photoresistor_PIN));// ADC channel 0 - Photoresistor
             lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
+            connected = false;
         }
 
         public void ConnectToWifi()
@@ -93,8 +95,6 @@ namespace ESPnanoFrameworkApp
         /// <param name="e"></param>
         private static void Wifi_AvailableNetworksChanged(WiFiAdapter sender, object e)
         {
-            Debug.WriteLine("Wifi_AvailableNetworksChanged - get report");
-
             // Get Report of all scanned WiFi networks
             WiFiNetworkReport report = sender.NetworkReport;
 
@@ -130,12 +130,21 @@ namespace ESPnanoFrameworkApp
 
         public void ConnectToServer()
         {
-            ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
-            Debug.WriteLine("Created endpoint to server");
-            Debug.WriteLine("Connecting.....");
-            tcpclnt.Connect(ep);
-            Debug.WriteLine("Connected to server");
+            try
+            {
+                ep = new IPEndPoint(IPAddress.Parse(IP_ADDR), TCP_PORT);
+                Debug.WriteLine("Created endpoint to server");
+                Debug.WriteLine("Connecting.....");
+                tcpclnt.Connect(ep);
+                Debug.WriteLine("Connected to server");
+                connected = true;
 
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("message:" + ex.Message);
+                Debug.WriteLine("stack:" + ex.StackTrace);
+            }
         }
 
         private byte[] Read() { 
