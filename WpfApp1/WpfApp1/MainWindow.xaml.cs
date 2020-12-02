@@ -62,6 +62,16 @@ namespace WpfApp1
             DataContext = this; // livechart 
         }
 
+        private void UpdateData()
+        {
+                DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable,
+                TempChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["temp"])); // Temp - Chart
+                LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["humit"])); // Light - Chart
+                TimeDateChart.Labels.Add(DateTime.FromOADate((Double)local_DataTable.Rows[local_DataTable.Rows.Count - 1]["datetime"] - 2415018.5).ToString("g")); // TimeDate - Chart 
+                LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["humit"]); //Light - Angular Gauge
+                TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Temp - Angular Gauge
+        }
+
         private void SetTimer()
         {
             // Create a timer with a two second interval.
@@ -147,7 +157,7 @@ namespace WpfApp1
                 server.ReadSensorData();
                 server.databaseObject.Filldata();
                 Filldatagrid();
-                WpfAddData();
+                UpdateData();
              });
            
         }
