@@ -21,7 +21,7 @@ namespace WpfApp1
     public partial  class MainWindow : Window
     {
        static SeSkarptServer server = new SeSkarptServer();
-        public const int THREAD_SLEEP_TIME_SEC = 10;
+        public const int SLEEP_TIME_SEC = 10;
         private Timer aTimer;
         
 
@@ -31,8 +31,6 @@ namespace WpfApp1
             Filldatagrid();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
             WpfAddData();
-            /*Thread thread = new Thread(new ThreadStart(ThreadMethod));
-            thread.Start();*/
             SetTimer();
            
         }
@@ -75,14 +73,14 @@ namespace WpfApp1
         private void SetTimer()
         {
             // Create a timer with a two second interval.
-             aTimer = new Timer(THREAD_SLEEP_TIME_SEC*1000);
+             aTimer = new Timer(SLEEP_TIME_SEC*1000);
             // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += ThreadMethod;
+            aTimer.Elapsed += TimerMethod;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
         }
 
-        private void ThreadMethod(Object source, ElapsedEventArgs e) {
+        private void TimerMethod(Object source, ElapsedEventArgs e) {
             if (server.connected == true)
             {
                 
