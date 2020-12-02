@@ -9,23 +9,25 @@
        
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
-    <Grid>
+    <Grid Background="AliceBlue">
         <TabControl>
-            <TabItem Header="test">
-                <Grid>
+            <TabItem Header="Home" Height="25" Width="50" Background="AliceBlue" BorderBrush="AliceBlue" >
+                <Grid Background="#bad4ff">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*" />
                         <ColumnDefinition Width="4*" />
-                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="0.5*" />
                         <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="0.5*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="9*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.5*"/>
-                        
+
                     </Grid.RowDefinitions>
                     
 
@@ -42,7 +44,9 @@
                         </lvc:AngularGauge.Sections>
                     </lvc:AngularGauge>
 
-                    <TextBlock Text="Light" FontWeight="Bold" FontSize="30" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Button x:Name="SampleGauge" Content="Sample" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="Sample_Click"/>
+
+                    <TextBlock Text="Light" FontWeight="Bold" FontSize="30" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent"/>
                     <lvc:AngularGauge Name="LightGauge" Grid.Column="3" Grid.Row="1" FromValue="0" ToValue="60" 
                           LabelsStep="5" TicksStep="25" Wedge="300"
                           TicksForeground="White" Foreground="White" 
@@ -53,33 +57,35 @@
                         </lvc:AngularGauge.Sections>
                     </lvc:AngularGauge>
 
+                    <Button x:Name="LEDred" Content="Red" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top" Width="75" Background="#FFFD0000" FontWeight="Bold" BorderBrush="#FFFD0000"  Click="LEDred_Click"/>
+                    <Button x:Name="LEDgreen" Content="Green" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Left" Margin="0,60,0,0" VerticalAlignment="Top" Width="75" FontWeight="Bold" Background="#FF19CB07" BorderBrush="#FF19CB07"  Click="LEDgreen_Click"/>
+                    <Button x:Name="LEDblue" Content="Blue" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top" Width="75"  Background="#FF0F3BD1" BorderBrush="#FF0F3BD1" FontWeight="Bold" Click="LEDblue_Click"/>
+                    <Button x:Name="LEDmagenta" Content="Magenta" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Left" Margin="0,120,0,0"  VerticalAlignment="Top" Width="75" BorderBrush="#FFDA0FC8" Background="#FFDA0FC8" FontWeight="Bold" Click="LEDmagenta_Click"/>
+                    <Button x:Name="LEDcyan" Content="Cyan" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Left" Margin="0,150,0,0" VerticalAlignment="Top" Width="75"  Background="#FF09D1DA" BorderBrush="#FF09D1DA" FontWeight="Bold" Click="LEDcyan_Click"/>
+                    <Button x:Name="LEDyellow" Content="Yellow" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Left" Margin="0,180,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFE8DE16" Background="#FFE8DE16" FontWeight="Bold" Click="LEDyellow_Click"/>
+                    <Button x:Name="LEDwhite" Content="White" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Left" Margin="0,210,0,0" VerticalAlignment="Top" Width="75" Background="#FFFFFDFD" BorderBrush="#FFFFFDFD" FontWeight="Bold" Click="LEDwhite_Click"/>
+                    <Button Content="Off" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Left" Margin="0,240,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FF060606" Background="#FF060606" Foreground="#FFFDFCFC" FontWeight="Bold" Click="Button_Click_1"/>
+
                 </Grid>
             </TabItem>
-            <TabItem Header="Data" Height="25" Width="50">
-                <Grid>
+            <TabItem Header="Data" Height="25" Width="50" Background="AliceBlue" BorderBrush="AliceBlue">
+                <Grid Background="#bad4ff">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="497*"/>
-                        <ColumnDefinition Width="295*"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="484*"/>
+                        <ColumnDefinition Width="293*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid Name="Dataset" HorizontalAlignment="Left" Height="203" Margin="21,28,0,0" VerticalAlignment="Top" Width="164"/>
-                    <Button x:Name="SayHello" Content="SayHello" HorizontalAlignment="Left" Margin="151,36,0,0" VerticalAlignment="Top" Width="75" Click="SayHello_Click" Grid.Column="1"/>
-                    <Button x:Name="LEDred" Content="Red" HorizontalAlignment="Left" Margin="151,175,0,0" VerticalAlignment="Top" Width="75" Background="#FFFD0000" FontWeight="Bold" BorderBrush="#FFFD0000" Grid.Column="1" Click="LEDred_Click"/>
-                    <Button x:Name="LEDgreen" Content="Green" HorizontalAlignment="Left" Margin="151,195,0,0" VerticalAlignment="Top" Width="75" FontWeight="Bold" Background="#FF19CB07" BorderBrush="#FF19CB07" Grid.Column="1" Click="LEDgreen_Click"/>
-                    <Button x:Name="LEDblue" Content="Blue" HorizontalAlignment="Left" Margin="151,215,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Background="#FF0F3BD1" BorderBrush="#FF0F3BD1" FontWeight="Bold" Click="LEDblue_Click"/>
-                    <Button x:Name="LEDmagenta" Content="Magenta" Grid.Column="1" HorizontalAlignment="Left" Margin="151,235,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFDA0FC8" Background="#FFDA0FC8" FontWeight="Bold" Click="LEDmagenta_Click"/>
-                    <Button x:Name="LEDcyan" Content="Cyan" HorizontalAlignment="Left" Margin="151,255,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Background="#FF09D1DA" BorderBrush="#FF09D1DA" FontWeight="Bold" Click="LEDcyan_Click"/>
-                    <Button x:Name="LEDyellow" Content="Yellow" Grid.Column="1" HorizontalAlignment="Left" Margin="151,275,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFE8DE16" Background="#FFE8DE16" FontWeight="Bold" Click="LEDyellow_Click"/>
-                    <Button x:Name="LEDwhite" Content="White" Grid.Column="1" HorizontalAlignment="Left" Margin="151,295,0,0" VerticalAlignment="Top" Width="75" Background="#FFFFFDFD" BorderBrush="#FFFFFDFD" FontWeight="Bold" Click="LEDwhite_Click"/>
-                    <Button Content="Off" Grid.Column="1" HorizontalAlignment="Left" Margin="151,315,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FF060606" Background="#FF060606" Foreground="#FFFDFCFC" FontWeight="Bold" Click="Button_Click_1"/>
-                    <TextBox x:Name="console" HorizontalAlignment="Left" Height="357" Margin="213,28,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="389" Grid.ColumnSpan="2"/>
-                    <Button x:Name="Sample" Content="Sample" Grid.Column="1" HorizontalAlignment="Left" Margin="151,75,0,0" VerticalAlignment="Top" Width="75" Click="Sample_Click"/>
-                    <Button x:Name="Disconnect" Content="Disconnect" Grid.Column="1" HorizontalAlignment="Left" Margin="151,112,0,0" VerticalAlignment="Top" Width="75" Click="Disconnect_Click"/>
-                    <Button x:Name="Connect" Content="Connect Device" Grid.Column="1" HorizontalAlignment="Left" Margin="151,145,0,0" VerticalAlignment="Top" Width="97" Click="Connect_Click"/>
+                    <DataGrid Name="Dataset" HorizontalAlignment="Left" Height="203" Margin="11.5,28,0,0" VerticalAlignment="Top" Width="164" Grid.Column="1"/>
+                    <Button x:Name="SayHello" Content="SayHello" HorizontalAlignment="Left" Margin="151,36,0,0" VerticalAlignment="Top" Width="75" Click="SayHello_Click" Grid.Column="2"/>
+                    <TextBox x:Name="console" HorizontalAlignment="Left" Height="357" Margin="203.5,28,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="389" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <Button x:Name="Sample" Content="Sample" Grid.Column="2" HorizontalAlignment="Left" Margin="151,75,0,0" VerticalAlignment="Top" Width="75" Click="Sample_Click"/>
+                    <Button x:Name="Disconnect" Content="Disconnect" Grid.Column="2" HorizontalAlignment="Left" Margin="151,112,0,0" VerticalAlignment="Top" Width="75" Click="Disconnect_Click"/>
+                    <Button x:Name="Connect" Content="Connect Device" Grid.Column="2" HorizontalAlignment="Left" Margin="151,145,0,0" VerticalAlignment="Top" Width="97" Click="Connect_Click"/>
                 </Grid>
 
             </TabItem>
-            <TabItem Header="Temp" Height="25" Width="50">
-                <Grid>
+            <TabItem Header="Temp" Height="25" Width="50" Background="AliceBlue" BorderBrush="AliceBlue">
+                <Grid Background="#bad4ff">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*" />
                         <ColumnDefinition Width="4*" />
@@ -98,10 +104,10 @@
                             <lvc:Axis Name="TimeDateChart" Title="Time" Position="LeftBottom"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
                         <lvc:CartesianChart.Series>
-                            <lvc:LineSeries Name="TempChart" ScalesYAt="0"/>
+                            <lvc:LineSeries Name="TempChart" ScalesYAt="0" />
                             <lvc:LineSeries Name="LightChart" ScalesYAt="1"/>
                         </lvc:CartesianChart.Series>
-                       
+
                     </lvc:CartesianChart>
 
                 </Grid>
