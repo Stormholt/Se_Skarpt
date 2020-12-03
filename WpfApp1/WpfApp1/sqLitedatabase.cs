@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data.SQLite;
 using System.IO;
 using System.Data;
@@ -22,7 +20,7 @@ namespace SQLiteDatabase
             }
         }
 
-        public void OpenConnection()
+        public void OpenConnection() //Opening the connection to the SQLite database
         {
             if (myConnection.State != System.Data.ConnectionState.Open)
             {
@@ -30,7 +28,7 @@ namespace SQLiteDatabase
             }
         }
 
-        public void CloseConnection()
+        public void CloseConnection() //Closing  the connection to the SQLite database
         {
             if (myConnection.State != System.Data.ConnectionState.Closed)
             {
@@ -38,11 +36,14 @@ namespace SQLiteDatabase
             }
         }
 
+        /// <summary>
+        ///  Taking the value of the temp and light combining it with the current time of the measurment 
+        ///  And storing it in the SQLite Database 
+        /// </summary>
         public void sendData(int temp, int light)
         {
-            
-            string query = "INSERT INTO TempAndHumit (`temp`, `light`, `datetime`) VALUES (@temp, @light, @datetime)";
-            SQLiteCommand myCommand = new SQLiteCommand(query, myConnection);
+            string query = "INSERT INTO TempAndHumit (`temp`, `light`, `datetime`) VALUES (@temp, @light, @datetime)"; //setting up a query with the info for hte table and values 
+            SQLiteCommand myCommand = new SQLiteCommand(query, myConnection); 
             myCommand.Parameters.AddWithValue("@temp", temp);
             myCommand.Parameters.AddWithValue("@light", light);
             myCommand.Parameters.AddWithValue("@datetime", ToJulianDate(DateTime.Now));
@@ -51,14 +52,14 @@ namespace SQLiteDatabase
         }
 
         //https://stackoverflow.com/questions/5248827/convert-datetime-to-julian-date-in-c-sharp-tooadate-safe
-        public static double ToJulianDate(DateTime date)
+        public static double ToJulianDate(DateTime date) // converting the current time to OA date and adding time for it to be Julian.
         {
             return date.ToOADate() + 2415018.5;
         }
 
         
 
-        public DataTable Filldata()
+        public DataTable Filldata() // Pulling Data from the Database 
         {
             SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM TempAndLight", myConnection);
             SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd);
