@@ -92,7 +92,7 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="Temp" Height="25" Width="50" Background="AliceBlue" BorderBrush="AliceBlue">
+            <TabItem Header="History" Height="25" Width="50" Background="AliceBlue" BorderBrush="AliceBlue">
                 <Grid Background="#bad4ff">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />

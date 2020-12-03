@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using SQLiteDatabase;
+using System.Collections.Generic;
 
 
 
@@ -41,22 +42,7 @@ namespace SeSkarpApplikation
             connected = false;
         }
 
-        public void ThreadMethod()
-        {
-            Console.WriteLine("Hello from Thread");
-            while (true)
-            {
-                if (connected == true)
-                {
-                    Console.WriteLine("Thread sampling");
-                    ReadSensorData();
-                    Thread.Sleep(THREAD_SLEEP_TIME_SEC * 1000);
-
-                    Console.WriteLine("Thread not sampling");
-                    Thread.Sleep(THREAD_SLEEP_TIME_SEC * 1000);
-                }
-            }
-        }
+      
         public void SendLEDCommand(Ledcolor ledcolor)
         {
             this.ledcolor = ledcolor;
@@ -92,19 +78,27 @@ namespace SeSkarpApplikation
         {
             int temp = 0;
             int light = 0;
-            byte[] buffer = new byte[10];
+            string msg;
+            byte[] lightBuffer = new byte[2];
+            byte[] tempBuffer = new byte[2];
+
             mutex.WaitOne();
-            int k = client.Receive(buffer);
+
+            int k = client.Receive(lightBuffer);
             Console.Write("Received : ");
-            light =  Convert.ToInt32(buffer[0]);
-            Console.Write($"{light} ");
-            buffer = new byte[10];
-            k = client.Receive(buffer);
-            temp = Convert.ToInt32(buffer[0]);
-            Console.Write($"{temp} ");
-            Console.Write("\n");
+            msg = Encoding.ASCII.GetString(lightBuffer);
+            light = Int32.Parse(msg);
+            Console.Write($"{light} lm ");
+
+            k = client.Receive(tempBuffer);
+            msg = Encoding.ASCII.GetString(tempBuffer);
+            temp = Int32.Parse(msg);
+            Console.WriteLine($"{temp} C");
+
             Write2Database(temp, light);
+           
             mutex.ReleaseMutex();
+            
         }
 
         public void ConnectDevice()

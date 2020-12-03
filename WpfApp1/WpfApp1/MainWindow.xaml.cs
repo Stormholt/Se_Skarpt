@@ -5,7 +5,9 @@ using System.Text;
 using System.Windows;
 using System.Data;
 using System.Windows.Controls;
+
 using LiveCharts;
+using LiveCharts.Wpf;
 using SeSkarpApplikation;
 using System.IO;
 using System.Timers;
@@ -19,7 +21,7 @@ namespace WpfApp1
     public partial  class MainWindow : Window
     {
        static SeSkarptServer server = new SeSkarptServer();
-        public const int THREAD_SLEEP_TIME_SEC = 10;
+        public const int SLEEP_TIME_SEC = 10;
         private Timer aTimer;
         
 
@@ -29,39 +31,34 @@ namespace WpfApp1
             Filldatagrid();
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
             WpfAddData();
-            /*Thread thread = new Thread(new ThreadStart(ThreadMethod));
-            thread.Start();*/
             SetTimer();
            
         }
 
         private void WpfAddData()
         {
-            //InitializeComponent(); // ikke sikker på om den kan fjernes tjek med data ajs
-            DataTable local_DataTable = server.databaseObject.Filldata(); // creating a local datatable with data from the database 
-            if (local_DataTable.Rows.Count == 0) // making sure there is data to fill 
+            InitializeComponent();
+            DataTable local_DataTable = server.databaseObject.Filldata();
+            if (local_DataTable.Rows.Count == 0)
             {
                 return;
             }
 
-             LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["light"]); //Angular Gauge - light data
-             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count)]["temp"]); //Angular Gauge - temp data 
+             LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Angular Gauge
+             TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
                 
             
             // Temp chat
-            // Creating ChartValues, which is a collection of data - from livechart 
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
             ChartValues<string> timeList = new ChartValues<string>();
 
-            for (int i = 0; i < local_DataTable.Rows.Count; i++) // Checking the whole datatable 
+            for (int i = 0; i < local_DataTable.Rows.Count; i++)
             {
                 tempList.Add(Convert.ToDouble(local_DataTable.Rows[i]["temp"]));
                 lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["light"]));
-                // The time is convertede from: real(Julian) -> OE -> UTC in DE format 
-                timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g")); 
+                timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g"));
             }
-            // loading the value in the the 2 Y Axis with temp/light and the 1 X with timedate
             TempChart.Values = tempList;
             LightChart.Values = lightList;
             TimeDateChart.Labels = timeList;
@@ -69,9 +66,9 @@ namespace WpfApp1
             DataContext = this; // livechart 
         }
 
-        private void UpdateData() // Function that only loads the last entry in the database 
-        {
-                DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable
+        private void UpdateData()
+        {   
+                DataTable local_DataTable = server.databaseObject.Filldata(); // Creating a Local Datatable,
                 TempChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["temp"])); // Temp - Chart
                 LightChart.Values.Add(Convert.ToDouble(local_DataTable.Rows[local_DataTable.Rows.Count - 1]["light"])); // Light - Chart
                 TimeDateChart.Labels.Add(DateTime.FromOADate((Double)local_DataTable.Rows[local_DataTable.Rows.Count - 1]["datetime"] - 2415018.5).ToString("g")); // TimeDate - Chart 
@@ -82,14 +79,14 @@ namespace WpfApp1
         private void SetTimer()
         {
             // Create a timer with a two second interval.
-             aTimer = new Timer(THREAD_SLEEP_TIME_SEC*1000);
+             aTimer = new Timer(SLEEP_TIME_SEC*1000);
             // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += ThreadMethod;
+            aTimer.Elapsed += TimerMethod;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
         }
 
-        private void ThreadMethod(Object source, ElapsedEventArgs e) {
+        private void TimerMethod(Object source, ElapsedEventArgs e) {
             if (server.connected == true)
             {
                 
@@ -108,10 +105,6 @@ namespace WpfApp1
           
         }
 
-        /// <summary>
-        /// All the buttons functions, sending the command/data
-        /// </summary>
-     
         private void LEDred_Click(object sender, RoutedEventArgs e)
         {
             server.SendCommand(SeSkarptServer.Command.SetData);
@@ -183,7 +176,8 @@ namespace WpfApp1
         {
             server.ConnectDevice();
         }
-
+        public ChartValues<double> Values1 { get; set; }
+        public ChartValues<double> Values2 { get; set; }
     }
 
     public class MultiTextWriter : TextWriter

@@ -172,14 +172,17 @@ namespace ESPnanoFrameworkApp
 
         public void SendData()
         {
-            byte[] buffer = new byte[1];
-            string msg = $"{photoresistor.CalculateLumen()} ";
-            buffer = Encoding.UTF8.GetBytes(msg);
-            Send(buffer);
+            byte[] lightbuffer;
+            string msg = $"{photoresistor.CalculateLumen()}";
+            Debug.WriteLine(msg);
+            lightbuffer = Encoding.UTF8.GetBytes(msg);
+            Send(lightbuffer);
+
             msg = $"{lm35.CalculateCelsius()}";
-            buffer = new byte[1];
-            buffer = Encoding.UTF8.GetBytes(msg);
-            Send(buffer);
+            Debug.WriteLine(msg);
+            byte[] tempbuffer; 
+            tempbuffer = Encoding.UTF8.GetBytes(msg);
+            Send(tempbuffer);
         }
 
         public void SendHello()
