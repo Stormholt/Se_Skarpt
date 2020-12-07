@@ -5,9 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Data;
 using System.Windows.Controls;
-
 using LiveCharts;
-using LiveCharts.Wpf;
 using SeSkarpApplikation;
 using System.IO;
 using System.Timers;
@@ -176,8 +174,6 @@ namespace WpfApp1
         {
             server.ConnectDevice();
         }
-        public ChartValues<double> Values1 { get; set; }
-        public ChartValues<double> Values2 { get; set; }
     }
 
     public class MultiTextWriter : TextWriter
