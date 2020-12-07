@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SeSkarptEnumClasses
 {
-    public class Command
+    public class Command // An implementation of Enum class.
     {
         public static Command Disconnect { get; } = new Command(0, "Disconnect");
         public static Command SayHello { get; } = new Command(1, "SayHello");
@@ -20,7 +20,13 @@ namespace SeSkarptEnumClasses
             Name = name;
         }
 
-        public Command FindCommand(string contender)
+        /// <summary>
+        /// Method to find and return Command object based on a string with same name.
+        /// </summary>
+        /// <param name="contender"></param>
+        /// <returns Command></returns>
+
+        public Command FindCommand(string contender) 
         {
             if (Command.Disconnect.Name.Equals(contender))
             {
@@ -51,7 +57,7 @@ namespace SeSkarptEnumClasses
         }
 
     }
-    public class Ledcolor
+    public class Ledcolor // Enum implementation
     {
         public static Ledcolor Red { get; } = new Ledcolor(0, "Red");
         public static Ledcolor Blue { get; } = new Ledcolor(1, "Blue");
@@ -70,6 +76,11 @@ namespace SeSkarptEnumClasses
             Name = name;
         }
 
+        /// <summary>
+        /// Method to find and return Ledcolor object based on the name
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns Ledcolor ></returns>
         public Ledcolor FindLedcolor(string command)
         {
             if (Ledcolor.Red.Name.Equals(command))

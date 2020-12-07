@@ -89,9 +89,11 @@ namespace WpfApp1
         private void TimerMethod(Object source, ElapsedEventArgs e) {
             if (server.connected == true)
             {
-                
-                Sample_Click(null, null);
-            }
+                this.Dispatcher.Invoke(() =>
+                {
+                    Sample_Click(null, null);
+                });
+        }
         }
 
         private void Filldatagrid()
@@ -155,14 +157,13 @@ namespace WpfApp1
 
         private void Sample_Click(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.Invoke(() =>
-            { 
+            
                server.SendCommand(SeSkarptServer.Command.GetData);
                 server.ReadSensorData();
                 server.databaseObject.Filldata();
                 Filldatagrid();
                 UpdateData();
-             });
+             
            
         }
         private void Disconnect_Click(object sender, RoutedEventArgs e)
@@ -179,6 +180,10 @@ namespace WpfApp1
         public ChartValues<double> Values1 { get; set; }
         public ChartValues<double> Values2 { get; set; }
     }
+
+    /// <summary>
+    /// Credit goes to : Servy from Stack Overflow  https://stackoverflow.com/questions/18726852/redirecting-console-writeline-to-textbox
+    /// </summary>
 
     public class MultiTextWriter : TextWriter
     {

@@ -17,7 +17,7 @@ namespace espnfproject
         {
             try
             {
-                ESPclient client = new ESPclient();
+                ESPclient client = new ESPclient(); 
                 client.ConnectToWifi();
                 client.ConnectToServer();
 
@@ -30,8 +30,8 @@ namespace espnfproject
                     switch (client.command.Value)
                     {
                         case 0://DISCONNNECT
-                            client.rgbled.controlLED(Ledcolor.Off);
-                            client.tcpclnt.Close();
+                            client.rgbled.controlLED(Ledcolor.Off); // turn off LED
+                            client.tcpclnt.Close(); //Close TCP Connection.
                             Thread.Sleep(Timeout.Infinite);
                             break;
                         case 1://SAYHELLO
