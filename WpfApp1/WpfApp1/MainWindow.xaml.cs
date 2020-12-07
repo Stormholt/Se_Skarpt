@@ -85,10 +85,10 @@ namespace WpfApp1
             aTimer.Enabled = true;
         }
 
-        private void TimerMethod(Object source, ElapsedEventArgs e) {
-            if (server.connected == true)
+        private void TimerMethod(Object source, ElapsedEventArgs e) { // The timers event
+            if (server.connected == true) // if the server is connected. 
             {
-                this.Dispatcher.Invoke(() =>
+                this.Dispatcher.Invoke(() => // Class the dispatcher to take care of the sample
                 {
                     Sample_Click(null, null);
                 });
@@ -102,15 +102,15 @@ namespace WpfApp1
         // All the Buttons 
         private void SayHello_Click(object sender, RoutedEventArgs e)
         {
-             server.SendCommand(SeSkarptServer.Command.SayHello);
-            server.ReadStringData();
+             server.SendCommand(SeSkarptServer.Command.SayHello); // Send SayHello command
+            server.ReadStringData(); // Now expects a Hello world string
           
         }
 
         private void LEDred_Click(object sender, RoutedEventArgs e)
         {
-            server.SendCommand(SeSkarptServer.Command.SetData);
-            server.SendLEDCommand(SeSkarptServer.Ledcolor.Red);
+            server.SendCommand(SeSkarptServer.Command.SetData); // Sends SetData command
+            server.SendLEDCommand(SeSkarptServer.Ledcolor.Red); // Send red
         }
 
         private void LEDgreen_Click(object sender, RoutedEventArgs e)
@@ -158,17 +158,16 @@ namespace WpfApp1
         private void Sample_Click(object sender, RoutedEventArgs e)
         {
             
-               server.SendCommand(SeSkarptServer.Command.GetData);
-                server.ReadSensorData();
-                server.databaseObject.Filldata();
-                Filldatagrid();
-                UpdateData();
+               server.SendCommand(SeSkarptServer.Command.GetData); // Send GetData Command
+                server.ReadSensorData();                            // Receive sensor values
+                Filldatagrid();                                     //Updates the visual database   
+                UpdateData(); // updates the charts
              
            
         }
         private void Disconnect_Click(object sender, RoutedEventArgs e)
         {
-            server.DisconnectDevice();
+            server.DisconnectDevice(); 
 
 
         }
@@ -181,6 +180,7 @@ namespace WpfApp1
 
     /// <summary>
     /// Credit goes to : Servy from Stack Overflow  https://stackoverflow.com/questions/18726852/redirecting-console-writeline-to-textbox
+    /// This class overides the methods of the abstract TextWriter to work with all the ControlWriter it has in its list.
     /// </summary>
 
     public class MultiTextWriter : TextWriter
@@ -219,6 +219,10 @@ namespace WpfApp1
             get { return Encoding.ASCII; }
         }
     }
+    /// <summary>
+    /// This class overwrites the abstract TextWriter to apply to TextBox
+    /// Credit goes to : Servy from Stack Overflow  https://stackoverflow.com/questions/18726852/redirecting-console-writeline-to-textbox
+    /// </summary>
     public class ControlWriter : TextWriter
     {
         private TextBox textbox;
