@@ -11,13 +11,13 @@ namespace SQLiteDatabase
 
         public sqLitedatabase()
         {
-            myConnection = new SQLiteConnection("Data Source=database.sqlite");
+            myConnection = new SQLiteConnection("Data Source=database.sqlite"); // Connecting to the database in the projekt with that name
 
-            if (!File.Exists("./database.sqlite"))
-            {
-                SQLiteConnection.CreateFile("database.sqlite");
+            if (!File.Exists("./database.sqlite")) // checking the the files exist 
+            { // If NOT
+                SQLiteConnection.CreateFile("database.sqlite"); // Creating the database
                 System.Console.WriteLine("Database created");
-            }
+            } // Still need to have the tables created manually 
         }
 
         public void OpenConnection() //Opening the connection to the SQLite database
