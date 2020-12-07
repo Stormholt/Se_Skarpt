@@ -74,7 +74,9 @@ namespace ESPnanoFrameworkApp
             lm35 = new LM35(adcController.OpenChannel(LM35_PIN));// ADC channel 3 - LM35 Themistor
             connected = false;
         }
-
+        /// <summary>
+        /// Connects to Wifi specified and initliase the TCP socket
+        /// </summary>
         public void ConnectToWifi()
         {
             wifi = WiFiAdapter.FindAllAdapters()[0];
@@ -82,7 +84,7 @@ namespace ESPnanoFrameworkApp
 
             Debug.WriteLine("starting WiFi scan");
             wifi.ScanAsync();
-            Thread.Sleep(10000);
+            Thread.Sleep(10000);// Waits because the scan is async.
 
             tcpclnt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Debug.WriteLine("Created tcp client socket");
@@ -90,6 +92,7 @@ namespace ESPnanoFrameworkApp
         }
         /// <summary>
         /// Event handler for when WiFi scan completes
+        /// This method was inspired by the wifiScan example by the nanoFramework.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

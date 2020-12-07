@@ -26,6 +26,10 @@ namespace RGBled
             B.SetDriveMode(mode);
             controlLED(ledcolor);
         }
+        /// <summary>
+        /// Method to set the color of the LED
+        /// </summary>
+        /// <param name="color"></param>
         public void controlLED(Ledcolor color)
         {
             if (Ledcolor.Red.Equals(color))

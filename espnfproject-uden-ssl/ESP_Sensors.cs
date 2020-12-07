@@ -11,22 +11,24 @@ namespace espSensors
 
         public AdcChannel adcChannel { get; private set; }
         public int measurement { get; private set; }
-        public Photoresistor()
-        {
-            measurement = 0;
-            adcChannel = null;
-        }
+      
         public Photoresistor(AdcChannel adcChannel)
         {
            this.adcChannel = adcChannel;
            measurement = 0; 
         }
 
+        /// <summary>
+        /// Method read the analog value and saves it to measurement
+        /// </summary>
         private void Read()
         {
            measurement = adcChannel.ReadValue();
         }
-
+        /// <summary>
+        /// Checks if the value has changed and if so saves it to measurement
+        /// </summary>
+        /// <returns></returns>
         public bool HasLightChanged()
         {
             int newMeasurement = this.adcChannel.ReadValue();
@@ -39,6 +41,11 @@ namespace espSensors
             else { return false; }
         }
 
+        /// <summary>
+        /// Reads the latest value and then calculates the lumen value.
+        /// calculations based on : https://www.instructables.com/How-to-Use-a-Light-Dependent-Resistor-LDR/
+        /// </summary>
+        /// <returns></returns>
         public int CalculateLumen()
             {
                 Read();
