@@ -23,40 +23,41 @@ namespace WpfApp1
         private Timer aTimer;
         
 
-        public MainWindow()
+        public MainWindow() // MainWindow for the WPF App used to initalize everything, for the first time. 
         {
             InitializeComponent();
-            Filldatagrid();
+            Filldatagrid(); // Filling out the Grid of the DataTable
             Console.SetOut(new MultiTextWriter(new ControlWriter(console), Console.Out));
-            WpfAddData();
+            WpfAddData(); // Addding any old data that may be in the Database
             SetTimer();
            
         }
 
-        private void WpfAddData()
+        private void WpfAddData() // Adding all the old data from the database. 
         {
-            InitializeComponent();
-            DataTable local_DataTable = server.databaseObject.Filldata();
-            if (local_DataTable.Rows.Count == 0)
+            InitializeComponent(); 
+            DataTable local_DataTable = server.databaseObject.Filldata(); // creating local dataTable for the old data 
+            if (local_DataTable.Rows.Count == 0) // Making sure that there is data 
             {
                 return;
             }
-
+            // Filling in the data to the gauge form the datatable
              LightGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["light"]); //Angular Gauge
              TempGauge.Value = Convert.ToDouble(local_DataTable.Rows[(local_DataTable.Rows.Count - 1)]["temp"]); //Angular Gauge
                 
             
-            // Temp chat
+            // Temp chart variables 
             ChartValues<double> tempList = new ChartValues<double>();
             ChartValues<double> lightList = new ChartValues<double>();
             ChartValues<string> timeList = new ChartValues<string>();
-
+            // Filling out all the data in the datatable 
             for (int i = 0; i < local_DataTable.Rows.Count; i++)
             {
                 tempList.Add(Convert.ToDouble(local_DataTable.Rows[i]["temp"]));
                 lightList.Add(Convert.ToDouble(local_DataTable.Rows[i]["light"]));
-                timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g"));
+                timeList.Add(DateTime.FromOADate((Double)local_DataTable.Rows[(i)]["datetime"] - 2415018.5).ToString("g")); // Following the convertion Julian -> OA -> Normale De timeDate.
             }
+            // Loading all the data in the chart with value from the datatable
             TempChart.Values = tempList;
             LightChart.Values = lightList;
             TimeDateChart.Labels = timeList;
@@ -94,8 +95,9 @@ namespace WpfApp1
 
         private void Filldatagrid()
         {
-            Dataset.ItemsSource = server.databaseObject.Filldata().DefaultView;
+            Dataset.ItemsSource = server.databaseObject.Filldata().DefaultView; // Load the data in to the grid with a datatable 
         }
+        // All the Buttons 
         private void SayHello_Click(object sender, RoutedEventArgs e)
         {
              server.SendCommand(SeSkarptServer.Command.SayHello);

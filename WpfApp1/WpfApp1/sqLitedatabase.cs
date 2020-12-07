@@ -46,8 +46,8 @@ namespace SQLiteDatabase
             SQLiteCommand myCommand = new SQLiteCommand(query, myConnection); 
             myCommand.Parameters.AddWithValue("@temp", temp);
             myCommand.Parameters.AddWithValue("@light", light);
-            myCommand.Parameters.AddWithValue("@datetime", ToJulianDate(DateTime.Now));
-            myCommand.ExecuteNonQuery();
+            myCommand.Parameters.AddWithValue("@datetime", ToJulianDate(DateTime.Now)); // taking the current time and converting ti to julian time so it fit in a real
+            myCommand.ExecuteNonQuery(); // executing the data query
             
         }
 
@@ -61,11 +61,11 @@ namespace SQLiteDatabase
 
         public DataTable Filldata() // Pulling Data from the Database 
         {
-            SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM TempAndLight", myConnection);
-            SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd);
-            DataTable dt = new DataTable("Dataset");
-            sda.Fill(dt);
-            return dt;
+            SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM TempAndLight", myConnection); // Selecting the data table in the SQlite database
+            SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd); // setting up a data adapter with the command 
+            DataTable dt = new DataTable("Dataset");  // creating hte datatable to sen dthe data
+            sda.Fill(dt); // Filling out the data
+            return dt; // retuning the datatable
         }
     }
 }
